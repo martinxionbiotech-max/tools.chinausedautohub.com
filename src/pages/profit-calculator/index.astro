@@ -1,0 +1,178 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/profit-calculator/";
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Profit Calculator",
+  url: pageUrl,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "Model gross profit, margin and ROI for a used vehicle export deal from purchase price, shipping, tax, local costs and expected selling price.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Profit Calculator", item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Profit Calculator — China Used Car Export"
+  description="Model your gross profit, margin and ROI for a used vehicle export deal. All inputs editable; every assumption adjustable."
+  canonical="/profit-calculator/"
+  jsonLd={[webApp, breadcrumb]}
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Profit Calculator", url: pageUrl },
+  ]}
+>
+  <h1>Profit Calculator</h1>
+  <p class="lede">
+    Model the gross profit, margin and ROI of a single-vehicle export deal.
+    Every input is editable so you can adjust assumptions on the fly.
+  </p>
+
+  <div class="section">
+    <h2>Inputs</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="purchase">Purchase price (USD)</label>
+        <input id="purchase" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 18000" />
+      </div>
+      <div class="field">
+        <label for="shipping">Shipping (USD)</label>
+        <input id="shipping" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 2500" />
+      </div>
+      <div class="field">
+        <label for="tax">Tax &amp; duty (USD)</label>
+        <input id="tax" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 9000" />
+        <span class="hint">Use the Import Duty Calculator for this figure.</span>
+      </div>
+      <div class="field">
+        <label for="local">Local costs (USD)</label>
+        <input id="local" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 1000" />
+        <span class="hint">Port, clearance, registration, inspection.</span>
+      </div>
+      <div class="field">
+        <label for="selling">Expected selling price (USD)</label>
+        <input id="selling" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 35000" />
+      </div>
+    </div>
+    <p class="form-error" id="error"></p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated result</h2>
+    <div class="result-panel" id="result">
+      <p class="rate-meta">Enter purchase price and selling price to see profit.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Calculation logic</h2>
+    <div class="formula">Total cost   = Purchase + Shipping + Tax & duty + Local costs
+Gross profit = Selling price − Total cost
+Gross margin = Gross profit ÷ Selling price × 100%
+ROI          = Gross profit ÷ Total cost × 100%</div>
+    <p>Margin is profit as a share of revenue; ROI is profit as a share of money invested.</p>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>All figures are estimates — FX, taxes and fees change.</li>
+      <li>Does not account for financing cost, storage, warranty, or currency risk.</li>
+      <li>Selling price is your assumption, not a market guarantee.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Example</h2>
+    <p>Buy a vehicle for $18,000, ship for $2,500, pay $9,000 tax, $1,000 local, sell at $35,000:</p>
+    <div class="formula">Total cost   = 18,000 + 2,500 + 9,000 + 1,000 = $30,500
+Gross profit = 35,000 − 30,500 = $4,500
+Gross margin = 4,500 ÷ 35,000 = 12.9%
+ROI          = 4,500 ÷ 30,500 = 14.8%</div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
+      <a href={TOOLS_SITE_URL + "/currency-converter/"}>Currency Converter</a>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to buy? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script>
+  import { calcProfit, fmtMoney } from "../../lib/calc.js";
+
+  const el = (id) => document.getElementById(id);
+  const ids = ["purchase", "shipping", "tax", "local", "selling"];
+
+  function num(id) {
+    const v = el(id).value.trim();
+    if (v === "") return 0;
+    const n = Number(v);
+    return Number.isFinite(n) && n >= 0 ? n : NaN;
+  }
+
+  function compute() {
+    const vals = {};
+    let ok = true;
+    for (const id of ids) {
+      vals[id] = num(id);
+      if (Number.isNaN(vals[id])) { ok = false; el(id).classList.add("invalid"); }
+      else el(id).classList.remove("invalid");
+    }
+    const err = el("error");
+    if (!ok) {
+      err.textContent = "All inputs must be non-negative numbers.";
+      el("result").innerHTML = '<p class="rate-meta">Fix the highlighted fields to see the result.</p>';
+      return;
+    }
+    err.textContent = "";
+
+    const r = calcProfit({
+      purchase: vals.purchase,
+      shipping: vals.shipping,
+      tax: vals.tax,
+      localCost: vals.local,
+      selling: vals.selling,
+    });
+
+    const pct = (v) => (v >= 0 ? "+" : "") + v.toFixed(1) + "%";
+    const line = (label, v, cls = "") =>
+      `<div class="result-line ${cls}"><span>${label}</span><span class="val">${v}</span></div>`;
+    el("result").innerHTML =
+      line("Total cost (estimated)", fmtMoney(r.totalCost)) +
+      line("Gross profit (estimated)", fmtMoney(r.grossProfit), r.grossProfit < 0 ? "loss" : "") +
+      `<div class="result-total-row"><span>Gross margin</span><span class="val">${pct(r.marginPct)}</span></div>` +
+      `<div class="result-total-row"><span>ROI</span><span class="val">${pct(r.roiPct)}</span></div>` +
+      '<p class="rate-meta">Estimates only. Verify tax, fees and FX before transacting.</p>';
+  }
+
+  for (const id of ids) el(id).addEventListener("input", compute);
+  compute();
+</script>

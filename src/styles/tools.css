@@ -1,0 +1,90 @@
+/* China Used Car Export — Tools site styles (imported by each tool page) */
+
+.lede { font-size: 18px; color: var(--color-text-soft); margin: 0 0 var(--space-4); }
+
+/* Tool directory */
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--space-4); margin: var(--space-4) 0; }
+.tool-card { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); background: var(--color-bg); }
+.tool-card h2 { margin: 0; font-size: 17px; }
+.tool-card p { margin: 0; font-size: 14px; color: var(--color-text-soft); flex-grow: 1; }
+.tool-card .cta { font-weight: 600; font-size: 14px; }
+.badge-soon { background: var(--color-bg-alt); color: var(--color-text-soft); }
+.badge-review { background: #fbe9e7; color: var(--color-danger); }
+.badge-est { background: var(--color-accent-soft); color: var(--color-primary); }
+
+/* Sections */
+.section { margin: var(--space-5) 0; }
+.section h2 { border-bottom: 2px solid var(--color-border); padding-bottom: var(--space-2); font-size: 20px; }
+
+/* Forms */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 14px; font-weight: 600; }
+.field input, .field select {
+  padding: 12px; font-size: 16px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); width: 100%; background: var(--color-bg);
+}
+.field input:focus, .field select:focus { outline: 2px solid var(--color-accent); border-color: var(--color-accent); }
+.field input.invalid { border-color: var(--color-danger); }
+.hint { font-size: 12px; color: var(--color-text-soft); }
+.form-error { color: var(--color-danger); font-size: 13px; min-height: 1.2em; margin: var(--space-2) 0; }
+
+/* Results */
+.result-panel { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4); background: var(--color-bg-alt); margin-top: var(--space-4); }
+.result-total { font-size: 24px; font-weight: 700; color: var(--color-primary); }
+.result-line { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--color-border); font-size: 14px; }
+.result-line:last-child { border-bottom: none; }
+.result-line .val { font-weight: 600; font-variant-numeric: tabular-nums; }
+.result-total-row { display: flex; justify-content: space-between; padding-top: 10px; margin-top: 6px; border-top: 2px solid var(--color-border); }
+.result-total-row .val { font-weight: 700; font-size: 18px; color: var(--color-primary); }
+
+/* Tables scroll */
+.table-wrap { overflow-x: auto; margin: var(--space-3) 0; }
+table.data-table th:first-child { min-width: 140px; }
+
+/* Note boxes */
+.note { background: #fdf3dc; border: 1px solid #f0d9a8; border-radius: var(--radius-md); padding: var(--space-3); font-size: 14px; color: var(--color-warning); margin: var(--space-3) 0; }
+.note.warn { background: #fbe9e7; border-color: #f2c4bd; color: var(--color-danger); }
+.note.info { background: var(--color-accent-soft); border-color: var(--color-border); color: var(--color-primary); }
+
+/* Match badges */
+.match-ok { color: var(--color-success); font-weight: 700; }
+.match-no { color: var(--color-danger); font-weight: 700; }
+
+/* Checklist */
+.checklist { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+.checklist li { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); }
+.checklist li label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 400; cursor: pointer; }
+.checklist input[type="checkbox"] { width: 18px; height: 18px; flex: none; }
+
+/* Buttons */
+.btn { display: inline-block; background: var(--color-accent); color: #fff; padding: 12px 20px; border-radius: var(--radius-md); font-weight: 600; font-size: 16px; text-decoration: none; border: none; cursor: pointer; }
+.btn:hover { background: var(--color-primary-soft); text-decoration: none; }
+.btn-block { width: 100%; }
+.btn-ghost { background: var(--color-bg); color: var(--color-accent); border: 1px solid var(--color-accent); }
+.btn-ghost:hover { background: var(--color-accent-soft); }
+
+/* Formula / logic */
+.formula { background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); font-family: var(--font-mono); font-size: 13px; overflow-x: auto; margin: var(--space-2) 0; white-space: pre-wrap; }
+
+/* CTA band */
+.cta-band { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); padding: var(--space-5); margin: var(--space-6) 0; text-align: center; }
+.cta-band h2 { color: #fff; border: none; }
+.cta-band p { color: #cfe0f2; }
+.cta-band .btn { background: #fff; color: var(--color-primary); margin-top: var(--space-2); }
+
+/* related */
+.related-grid { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.related-grid a { background: var(--color-bg-alt); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-md); font-size: 14px; }
+
+/* rate card */
+.rate-card { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); background: var(--color-bg); }
+.rate-card .rate-row { display: flex; justify-content: space-between; gap: var(--space-3); font-size: 14px; padding: 4px 0; flex-wrap: wrap; }
+.rate-card .rate-pct { font-weight: 700; font-size: 16px; }
+.rate-meta { font-size: 12px; color: var(--color-text-soft); }
+
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .checklist { grid-template-columns: 1fr; }
+  .tool-grid { grid-template-columns: 1fr; }
+}

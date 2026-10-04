@@ -1,0 +1,118 @@
+---
+import BaseLayout from "../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../shared/config/config";
+import "../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/";
+
+const tools = [
+  {
+    name: "Landed Cost Calculator",
+    url: "/landed-cost-calculator/",
+    desc: "Estimate the total landed cost of a vehicle — price, shipping, insurance, duty, VAT and port/local fees — for any destination market.",
+    done: true,
+  },
+  {
+    name: "Import Duty Calculator",
+    url: "/import-duty-calculator/",
+    desc: "Estimate import duty and VAT on a vehicle based on country, value, type, fuel, engine size and age.",
+    done: true,
+  },
+  {
+    name: "Profit Calculator",
+    url: "/profit-calculator/",
+    desc: "Model your gross profit, margin and ROI from purchase price, shipping, tax, local costs and expected selling price.",
+    done: true,
+  },
+  {
+    name: "Vehicle Comparison",
+    url: "/vehicle-comparison/",
+    desc: "Compare up to four Chinese-market vehicles side by side on dimensions, powertrain, battery, range and seats.",
+    done: true,
+  },
+  {
+    name: "Market Compatibility Check",
+    url: "/market-compatibility/",
+    desc: "Check whether a vehicle fits a destination market — drive side, import eligibility, taxes and known issues.",
+    done: true,
+  },
+  {
+    name: "Currency Converter",
+    url: "/currency-converter/",
+    desc: "Convert between USD and the seven destination-market currencies at the latest snapshot rates.",
+    done: true,
+  },
+  {
+    name: "Shipping Cost Estimator",
+    url: null,
+    desc: "Route-based freight estimates (RoRo / container). Coming soon — no unverified rates published.",
+    done: false,
+  },
+  {
+    name: "Total Cost of Ownership",
+    url: null,
+    desc: "Multi-year running costs including duties, insurance, and depreciation. Coming soon.",
+    done: false,
+  },
+];
+
+const itemList = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "China Used Car Export Decision Tools",
+  itemListElement: tools.filter((t) => t.done).map((t, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: t.name,
+    url: TOOLS_SITE_URL + t.url,
+  })),
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Decision Tools — China Used Car Export"
+  description="Free decision tools for used car export: landed cost, import duty, profit, vehicle comparison, market compatibility and currency conversion. Transparent formulas with sources and dates."
+  canonical="/"
+  jsonLd={itemList}
+>
+  <h1>Decision Tools</h1>
+  <p class="lede">
+    Practical calculators for used car export decisions. Every rate shows its
+    source and date, and every figure is clearly marked as an estimate — never
+    a guarantee. Verify current regulations before transacting.
+  </p>
+
+  <div class="tool-grid">
+    {tools.map((t) => (
+      <div class="tool-card">
+        <h2>{t.name}</h2>
+        <p>{t.desc}</p>
+        {t.done ? (
+          <a class="cta" href={t.url}>Open tool →</a>
+        ) : (
+          <div><span class="badge badge-soon">Coming soon</span></div>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <div class="section">
+    <h2>How these tools work</h2>
+    <p>
+      Calculations use structured data from the ecosystem: tax rules
+      (<a href={MARKET_SITE_URL + "/"}>Markets</a>), vehicle specifications
+      (<a href={DATA_SITE_URL + "/"}>Vehicle Data</a>) and exchange rates maintained
+      here. All figures are estimates — import rules and FX change frequently.
+    </p>
+  </div>
+
+  <div class="cta-band">
+    <h2>Need an actual vehicle?</h2>
+    <p>These tools estimate numbers. For available vehicles and a real quote, visit the main site.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Browse Vehicles</a>
+  </div>
+</BaseLayout>

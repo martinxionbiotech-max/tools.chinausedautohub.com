@@ -1,0 +1,188 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import countriesData from "../../../shared/data/countries.json";
+import fxData from "../../../shared/data/fx.json";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/currency-converter/";
+
+const countries = countriesData.countries;
+const fx = fxData;
+const fxSourceDate = fx.source_date;
+const fxConfidence = fx.confidence;
+const fxSource = fx.source;
+
+const currencies = [
+  { code: "USD", name: "US Dollar" },
+  ...countries.map((c) => ({ code: c.currency, name: c.name })),
+];
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Currency Converter",
+  url: pageUrl,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "Convert between USD and the seven destination-market currencies at the latest snapshot rates.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Currency Converter", item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Currency Converter — China Used Car Export"
+  description="Convert between USD and the seven destination-market currencies at the latest snapshot rates. Rates are dated and flagged as fluctuating."
+  canonical="/currency-converter/"
+  jsonLd={[webApp, breadcrumb]}
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Currency Converter", url: pageUrl },
+  ]}
+>
+  <h1>Currency Converter</h1>
+  <p class="lede">
+    Convert between USD and destination-market currencies. Rates are a snapshot —
+    they move constantly, so treat results as indicative.
+  </p>
+
+  <div class="note info">
+    Rates snapshot date: <strong>{fxSourceDate || "—"}</strong> · Source: {fxSource || "—"} ·
+    Confidence: {fxConfidence || "unknown"}. Exchange rates fluctuate — confirm the
+    current rate before transacting.
+  </div>
+
+  <div class="section">
+    <h2>Convert</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 10000" />
+      </div>
+      <div class="field">
+        <label for="from">From</label>
+        <select id="from">
+          {currencies.map((c) => <option value={c.code}>{c.code} — {c.name}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="to">To</label>
+        <select id="to">
+          {currencies.map((c) => <option value={c.code}>{c.code} — {c.name}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <button class="btn" id="swap" type="button">⇅ Swap</button>
+      </div>
+    </div>
+    <p class="form-error" id="error"></p>
+  </div>
+
+  <div class="section">
+    <h2>Result</h2>
+    <div class="result-panel" id="result">
+      <p class="rate-meta">Enter an amount to convert.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Calculation logic</h2>
+    <p>All rates are quoted against a USD base (units of local currency per 1 USD):</p>
+    <div class="formula">USD → Local: amount × rate
+Local → USD: amount ÷ rate
+A → B:      amount × (rate B ÷ rate A)</div>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>Rates are a single snapshot (<strong>{fxSourceDate || "unknown date"}</strong>); live market rates differ.</li>
+      <li>No mid-market vs. bank spread adjustment — actual FX transactions incur fees.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      {countries.map((c) => (
+        <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
+      ))}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
+      <a href={TOOLS_SITE_URL + "/profit-calculator/"}>Profit Calculator</a>
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to buy? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script type="application/json" id="fx-data" set:html={JSON.stringify(fx)}></script>
+<script>
+  import { convert, fmtMoney } from "../../lib/calc.js";
+
+  const fx = JSON.parse(document.getElementById("fx-data").textContent);
+  const el = (id) => document.getElementById(id);
+
+  const rateFor = (code) => (code === "USD" ? 1 : fx.rates[code] || 0);
+
+  function compute() {
+    const amountRaw = el("amount").value.trim();
+    const amount = Number(amountRaw);
+    const err = el("error");
+    if (amountRaw === "" || !Number.isFinite(amount) || amount < 0) {
+      err.textContent = "Amount must be a non-negative number.";
+      el("result").innerHTML = '<p class="rate-meta">Enter an amount to convert.</p>';
+      return;
+    }
+    err.textContent = "";
+
+    const from = el("from").value;
+    const to = el("to").value;
+    const fromRate = rateFor(from);
+    const toRate = rateFor(to);
+
+    const out = convert(amount, fromRate, toRate);
+    const decimals = to === "UZS" || to === "TZS" || to === "NGN" ? 0 : 2;
+    const formatted = out.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    const rateLine = `1 ${from} = ${(toRate / fromRate).toLocaleString("en-US", { maximumFractionDigits: 4 })} ${to}`;
+
+    el("result").innerHTML =
+      `<div class="result-line"><span>${amount.toLocaleString("en-US")} ${from}</span><span class="val">=</span></div>` +
+      `<div class="result-total-row"><span>${formatted} ${to}</span><span class="val"></span></div>` +
+      `<div class="rate-meta">${rateLine} · Snapshot date ${fx.source_date || "—"}. Exchange rates fluctuate.</div>`;
+  }
+
+  el("amount").addEventListener("input", compute);
+  el("from").addEventListener("change", compute);
+  el("to").addEventListener("change", compute);
+  el("swap").addEventListener("click", () => {
+    const a = el("from").value;
+    el("from").value = el("to").value;
+    el("to").value = a;
+    compute();
+  });
+  compute();
+</script>

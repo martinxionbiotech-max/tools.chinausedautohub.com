@@ -1,0 +1,240 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import countriesData from "../../../shared/data/countries.json";
+import taxrulesData from "../../../shared/data/taxrules.json";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/import-duty-calculator/";
+
+const countries = countriesData.countries;
+const taxrules = taxrulesData.taxrules;
+
+const taxByCountry = {};
+for (const r of taxrules) {
+  (taxByCountry[r.country_id] = taxByCountry[r.country_id] || {})[r.tax_type] = r;
+}
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Import Duty Calculator",
+  url: pageUrl,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "Estimate import duty and VAT on a used vehicle by destination country, vehicle value, type, fuel, engine size and age.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Import Duty Calculator", item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Import Duty Calculator — China Used Car Export"
+  description="Estimate import duty and VAT on a used vehicle by country, value, vehicle type, fuel type, engine size and age. Every rate shows its source and date."
+  canonical="/import-duty-calculator/"
+  jsonLd={[webApp, breadcrumb]}
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Import Duty Calculator", url: pageUrl },
+  ]}
+>
+  <h1>Import Duty Calculator</h1>
+  <p class="lede">
+    Estimate import duty and VAT on a vehicle using baseline duty and VAT rates
+    for the destination country.
+  </p>
+
+  <div class="section">
+    <h2>Inputs</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="country">Destination country</label>
+        <select id="country">
+          {countries.map((c) => <option value={c.country_id}>{c.name}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="value">Vehicle value (USD)</label>
+        <input id="value" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 20000" />
+      </div>
+      <div class="field">
+        <label for="vtype">Vehicle type</label>
+        <select id="vtype">
+          <option value="suv">SUV</option>
+          <option value="sedan">Sedan</option>
+          <option value="hatchback">Hatchback</option>
+          <option value="mpv">MPV</option>
+          <option value="pickup">Pickup</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fuel">Fuel type</label>
+        <select id="fuel">
+          <option value="ev">Electric (EV)</option>
+          <option value="phev">Plug-in hybrid (PHEV)</option>
+          <option value="hev">Hybrid (HEV)</option>
+          <option value="ice">Petrol / diesel (ICE)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="engine">Engine size (cc)</label>
+        <input id="engine" type="number" inputmode="numeric" min="0" step="any" placeholder="e.g. 1498 — 0 for EV" />
+      </div>
+      <div class="field">
+        <label for="age">Vehicle age (years)</label>
+        <input id="age" type="number" inputmode="numeric" min="0" step="any" placeholder="e.g. 3" />
+      </div>
+    </div>
+    <p class="form-error" id="error"></p>
+  </div>
+
+  <div class="section">
+    <h2>Applied rates</h2>
+    <div id="rate-box" class="rate-card">
+      <p class="rate-meta">Select a country to load duty and VAT rates.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Estimated result</h2>
+    <div class="result-panel" id="result">
+      <p class="rate-meta">Enter a vehicle value to see duty and VAT.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Calculation logic</h2>
+    <div class="formula">Import duty = Vehicle value × Import duty %
+VAT        = (Vehicle value + Import duty) × VAT %
+Total tax  = Import duty + VAT</div>
+    <p>
+      These are <strong>flat baseline rates</strong>. Some markets apply age- or
+      engine-specific bands that are not yet modeled — treat results as indicative.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>Rates come from public trade summaries and are flagged <strong>needs review</strong>; confirm with the destination customs authority.</li>
+      <li>Age/engine/fuel-specific duty bands are not modeled — this is a flat-rate estimate.</li>
+      <li>Customs valuation may differ from the declared value.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Example</h2>
+    <p>A $20,000 SUV imported to Kenya (duty 25%, VAT 16%):</p>
+    <div class="formula">Duty 25% of $20,000 = $5,000
+VAT 16% of ($20,000 + $5,000) = $4,000
+Total tax = $9,000</div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      {countries.map((c) => (
+        <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
+      ))}
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to buy? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script type="application/json" id="tax-by-country" set:html={JSON.stringify(taxByCountry)}></script>
+<script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL })}></script>
+<script>
+  import { calcDuty, fmtMoney } from "../../lib/calc.js";
+
+  const taxByCountry = JSON.parse(document.getElementById("tax-by-country").textContent);
+  const marketUrl = JSON.parse(document.getElementById("site-config").textContent).marketUrl;
+
+  const el = (id) => document.getElementById(id);
+
+  function num(id) {
+    const v = el(id).value.trim();
+    if (v === "") return 0;
+    const n = Number(v);
+    return Number.isFinite(n) && n >= 0 ? n : NaN;
+  }
+
+  function renderRates(countryId) {
+    const box = el("rate-box");
+    const c = taxByCountry[countryId];
+    const duty = c && c.import_duty;
+    const vat = c && c.vat;
+    const row = (label, rule) => {
+      if (!rule) return "";
+      const flag = rule.needs_review ? ' <span class="badge badge-review">needs review</span>' : "";
+      return `<div class="rate-row">
+        <span>${label}</span>
+        <span class="rate-pct">${rule.rate_pct}%</span>
+        <span class="rate-meta">${rule.label} · ${rule.basis}${flag}<br/>Source: ${rule.source} · ${rule.last_checked}</span>
+      </div>`;
+    };
+    box.innerHTML =
+      row("Import duty", duty) + row("VAT", vat) +
+      `<p class="rate-meta" style="margin-top:8px">
+        <a href="${marketUrl}/countries/${countryId}/" target="_blank" rel="noopener">Check current regulations →</a>
+      </p>`;
+  }
+
+  function compute() {
+    const countryId = el("country").value;
+    renderRates(countryId);
+
+    const value = num("value");
+    const age = num("age");
+    const engine = num("engine");
+    let ok = true;
+    for (const id of ["value", "age", "engine"]) {
+      if (Number.isNaN(num(id))) { ok = false; el(id).classList.add("invalid"); }
+      else el(id).classList.remove("invalid");
+    }
+    const err = el("error");
+    if (!ok) {
+      err.textContent = "Value, age and engine size must be non-negative numbers.";
+      el("result").innerHTML = '<p class="rate-meta">Fix the highlighted fields to see duty and VAT.</p>';
+      return;
+    }
+    err.textContent = "";
+
+    const c = taxByCountry[countryId] || {};
+    const r = calcDuty({
+      vehicleValue: value,
+      dutyRatePct: (c.import_duty && c.import_duty.rate_pct) || 0,
+      vatRatePct: (c.vat && c.vat.rate_pct) || 0,
+    });
+
+    const line = (label, v) =>
+      `<div class="result-line"><span>${label}</span><span class="val">${fmtMoney(v)}</span></div>`;
+    el("result").innerHTML =
+      line("Import duty (estimated)", r.duty) +
+      line("VAT (estimated)", r.vat) +
+      `<div class="result-total-row"><span>Total tax (estimated)</span><span class="val">${fmtMoney(r.total)}</span></div>` +
+      '<p class="rate-meta">Estimated based on available rules — check current regulations. Age/engine bands not modeled.</p>';
+  }
+
+  for (const id of ["value", "age", "engine"]) el(id).addEventListener("input", compute);
+  el("country").addEventListener("change", compute);
+  el("vtype").addEventListener("change", compute);
+  el("fuel").addEventListener("change", compute);
+  compute();
+</script>

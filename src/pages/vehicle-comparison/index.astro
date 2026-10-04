@@ -1,0 +1,181 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import modelsData from "../../../shared/data/models.json";
+import brandsData from "../../../shared/data/brands.json";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/vehicle-comparison/";
+
+const models = modelsData.models;
+const brandName = Object.fromEntries(brandsData.brands.map((b) => [b.brand_id, b.name]));
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Vehicle Comparison",
+  url: pageUrl,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description: "Compare Chinese-market vehicles side by side on body, powertrain, dimensions, wheelbase, battery, range and seats.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Vehicle Comparison", item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Vehicle Comparison — China Used Car Export"
+  description="Compare Chinese-market vehicles side by side: body, powertrain, dimensions, wheelbase, battery, range and seats. Full specs link to the data site; prices link to the main site."
+  canonical="/vehicle-comparison/"
+  jsonLd={[webApp, breadcrumb]}
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Vehicle Comparison", url: pageUrl },
+  ]}
+>
+  <h1>Vehicle Comparison</h1>
+  <p class="lede">
+    Compare up to four vehicles on the technical specifications that matter for
+    export decisions. Missing values show "Not available" — never fabricated.
+  </p>
+
+  <div class="section">
+    <h2>Select vehicles (2–4)</h2>
+    <ul class="checklist" id="picker">
+      {models.map((m) => (
+        <li>
+          <label>
+            <input type="checkbox" value={m.model_id} />
+            <span>{brandName[m.brand_id]} {m.name} <span class="rate-meta">({m.body_type})</span></span>
+          </label>
+        </li>
+      ))}
+    </ul>
+    <p class="form-error" id="error"></p>
+  </div>
+
+  <div class="section">
+    <h2>Comparison</h2>
+    <div id="result">
+      <p class="rate-meta">Select 2–4 vehicles to compare.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>How to read this</h2>
+    <p>
+      Specifications are the first available trim of the first generation for each
+      model and <strong>may vary by market / trim / source</strong>. Length, wheelbase,
+      battery and range come from the structured data site, where each value is
+      source-tracked. Prices are not listed here — they belong to the main site.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>One representative trim shown per model; other trims may differ.</li>
+      <li>Missing fields render as "Not available" rather than estimates.</li>
+      <li>Specifications reflect the China market and may differ for export variants.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Browse full data</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/"}>All models</a>
+      <a href={DATA_SITE_URL + "/vehicle-types/ev/"}>EVs</a>
+      <a href={DATA_SITE_URL + "/vehicle-types/suv/"}>SUVs</a>
+      <a href={DATA_SITE_URL + "/vehicle-types/sedan/"}>Sedans</a>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>See current listings and prices on the main site.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>See current listings</a>
+  </div>
+</BaseLayout>
+
+<script type="application/json" id="models-data" set:html={JSON.stringify(models)}></script>
+<script type="application/json" id="brand-name" set:html={JSON.stringify(brandName)}></script>
+<script type="application/json" id="site-config" set:html={JSON.stringify({ dataUrl: DATA_SITE_URL, mainUrl: MAIN_SITE_URL })}></script>
+<script>
+  const models = JSON.parse(document.getElementById("models-data").textContent);
+  const brandName = JSON.parse(document.getElementById("brand-name").textContent);
+  const { dataUrl, mainUrl } = JSON.parse(document.getElementById("site-config").textContent);
+
+  const el = (id) => document.getElementById(id);
+  const NA = "Not available";
+
+  function firstTrim(m) {
+    const g = (m.generations && m.generations[0]) || {};
+    return (g.trims && g.trims[0]) || {};
+  }
+
+  function specVal(m, key, unit) {
+    const s = firstTrim(m).specs || {};
+    const v = s[key];
+    return v == null || v === "" ? NA : `${v}${unit ? " " + unit : ""}`;
+  }
+
+  function powertrainLabel(m) {
+    const p = firstTrim(m).powertrain;
+    return ({ ev: "EV", phev: "PHEV", hev: "HEV", ice: "ICE" })[p] || p || NA;
+  }
+
+  function render() {
+    const boxes = [...el("picker").querySelectorAll("input:checked")].map((c) => c.value);
+    const err = el("error");
+    if (boxes.length < 2) {
+      err.textContent = `Select at least 2 vehicles (currently ${boxes.length}).`;
+      el("result").innerHTML = '<p class="rate-meta">Select 2–4 vehicles to compare.</p>';
+      return;
+    }
+    if (boxes.length > 4) {
+      err.textContent = "Maximum 4 vehicles.";
+      el("result").innerHTML = '<p class="rate-meta">Deselect to 4 or fewer vehicles.</p>';
+      return;
+    }
+    err.textContent = "";
+
+    const chosen = models.filter((m) => boxes.includes(m.model_id));
+    const rows = [
+      ["Brand", (m) => brandName[m.brand_id] || NA],
+      ["Model", (m) => m.name],
+      ["Body", (m) => m.body_type || NA],
+      ["Powertrain", powertrainLabel],
+      ["Length", (m) => specVal(m, "length_mm", "mm")],
+      ["Wheelbase", (m) => specVal(m, "wheelbase_mm", "mm")],
+      ["Battery", (m) => specVal(m, "battery_capacity_kwh", "kWh")],
+      ["Range", (m) => specVal(m, "range_km", "km")],
+      ["Seats", (m) => specVal(m, "seats")],
+      ["Full specs", (m) => `<a href="${dataUrl}/models/${m.model_id}/">View →</a>`],
+      ["Price", () => `<a href="${mainUrl}/">See current listings →</a>`],
+    ];
+
+    const head = `<tr><th>Attribute</th>${chosen.map((m) => `<th>${brandName[m.brand_id]} ${m.name}</th>`).join("")}</tr>`;
+    const body = rows.map(([label, fn]) =>
+      `<tr><th>${label}</th>${chosen.map((m) => `<td>${fn(m)}</td>`).join("")}</tr>`
+    ).join("");
+
+    el("result").innerHTML =
+      '<div class="table-wrap"><table class="data-table"><thead>' + head + "</thead><tbody>" + body + "</tbody></table></div>" +
+      '<p class="rate-meta">Representative trim per model. Specifications may vary by market / trim / source.</p>';
+  }
+
+  el("picker").addEventListener("change", render);
+  render();
+</script>

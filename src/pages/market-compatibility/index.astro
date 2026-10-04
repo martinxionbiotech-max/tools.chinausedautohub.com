@@ -1,0 +1,215 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import countriesData from "../../../shared/data/countries.json";
+import taxrulesData from "../../../shared/data/taxrules.json";
+import importrulesData from "../../../shared/data/importrules.json";
+import modelsData from "../../../shared/data/models.json";
+import brandsData from "../../../shared/data/brands.json";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/market-compatibility/";
+
+const countries = countriesData.countries;
+const taxrules = taxrulesData.taxrules;
+const importrules = importrulesData.rules || [];
+const models = modelsData.models;
+const brandName = Object.fromEntries(brandsData.brands.map((b) => [b.brand_id, b.name]));
+
+const taxByCountry = {};
+for (const r of taxrules) {
+  (taxByCountry[r.country_id] = taxByCountry[r.country_id] || {})[r.tax_type] = r;
+}
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Market Compatibility Check",
+  url: pageUrl,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description: "Check whether a vehicle fits a destination market on drive side, import eligibility, estimated taxes and known issues.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Market Compatibility Check", item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Market Compatibility Check — China Used Car Export"
+  description="Check whether a vehicle fits a destination market: drive side match, import eligibility, estimated taxes and known issues. Assumptions are stated explicitly."
+  canonical="/market-compatibility/"
+  jsonLd={[webApp, breadcrumb]}
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Market Compatibility Check", url: pageUrl },
+  ]}
+>
+  <h1>Market Compatibility Check</h1>
+  <p class="lede">
+    See whether a vehicle fits a destination market — drive side, import
+    eligibility, estimated taxes and known issues. Assumptions are stated, not hidden.
+  </p>
+
+  <div class="section">
+    <h2>Inputs</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="vehicle">Vehicle</label>
+        <select id="vehicle">
+          {models.map((m) => (
+            <option value={m.model_id}>{brandName[m.brand_id]} {m.name}</option>
+          ))}
+        </select>
+      </div>
+      <div class="field">
+        <label for="country">Destination country</label>
+        <select id="country">
+          {countries.map((c) => <option value={c.country_id}>{c.name}</option>)}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Compatibility report</h2>
+    <div id="result">
+      <p class="rate-meta">Select a vehicle and destination to run the check.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>How this works</h2>
+    <ul>
+      <li><strong>Drive side</strong> — compares the destination's <code>drive_side</code> against the assumption that China-market vehicles are left-hand drive (LHD).</li>
+      <li><strong>Import eligibility</strong> — age and other rules from the market data; empty until rules are published.</li>
+      <li><strong>Estimated taxes</strong> — baseline duty and VAT rates from the tax-rule data.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>The LHD assumption is explicit and may not hold for every trim or re-export case.</li>
+      <li>Import rules are high-risk data; many are not yet published — always confirm with the destination customs authority.</li>
+      <li>Tax rates are baselines flagged "needs review".</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/byd-song-plus/"}>BYD Song Plus</a>
+      <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/great-wall-haval-h6/"}>Haval H6</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      {countries.map((c) => (
+        <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
+      ))}
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to buy? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script type="application/json" id="countries-data" set:html={JSON.stringify(countries)}></script>
+<script type="application/json" id="tax-by-country" set:html={JSON.stringify(taxByCountry)}></script>
+<script type="application/json" id="import-rules" set:html={JSON.stringify(importrules)}></script>
+<script type="application/json" id="models-data" set:html={JSON.stringify(models)}></script>
+<script type="application/json" id="brand-name" set:html={JSON.stringify(brandName)}></script>
+<script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL, dataUrl: DATA_SITE_URL })}></script>
+<script>
+  const countries = JSON.parse(document.getElementById("countries-data").textContent);
+  const taxByCountry = JSON.parse(document.getElementById("tax-by-country").textContent);
+  const importRules = JSON.parse(document.getElementById("import-rules").textContent);
+  const models = JSON.parse(document.getElementById("models-data").textContent);
+  const brandName = JSON.parse(document.getElementById("brand-name").textContent);
+  const { marketUrl, dataUrl } = JSON.parse(document.getElementById("site-config").textContent);
+
+  const el = (id) => document.getElementById(id);
+  const NA = "No rule data yet";
+
+  function ruleBadge(r) {
+    return r.needs_review ? ' <span class="badge badge-review">needs review</span>' : "";
+  }
+
+  function compute() {
+    const modelId = el("vehicle").value;
+    const countryId = el("country").value;
+    const model = models.find((m) => m.model_id === modelId);
+    const country = countries.find((c) => c.country_id === countryId);
+    if (!model || !country) return;
+
+    // Drive side: China-market vehicles assumed LHD.
+    const lhsMatch = country.drive_side === "lhd";
+    const driveHtml = lhsMatch
+      ? '<span class="match-ok">✓ Match</span> — ' + country.name + " drives on the left (LHD) and China-market vehicles are assumed LHD."
+      : '<span class="match-no">✗ Mismatch</span> — ' + country.name + " is right-hand drive (RHD). China-market vehicles are assumed LHD and may not be road-legal there without conversion.";
+
+    // Import eligibility rules.
+    const rules = importRules.filter((r) => r.country_id === countryId);
+    const rulesHtml = rules.length
+      ? "<ul>" + rules.map((r) =>
+          `<li><strong>${r.title || r.category}</strong>: ${r.rule_text || ""} ${ruleBadge(r)}<br/><span class="rate-meta">Source: ${r.source || "—"} · ${r.last_checked || "—"}</span></li>`
+        ).join("") + "</ul>"
+      : NA + ' — <a href="' + marketUrl + "/countries/" + countryId + '/" target="_blank" rel="noopener">see market notes →</a>';
+
+    // Taxes.
+    const c = taxByCountry[countryId] || {};
+    const duty = c.import_duty;
+    const vat = c.vat;
+    const taxRow = (label, rule) => rule
+      ? `<div class="result-line"><span>${label}</span><span class="val">${rule.rate_pct}% <span class="rate-meta">(${rule.basis})</span></span></div>` +
+        `<div class="rate-meta">${rule.label} · Source: ${rule.source} · ${rule.last_checked}${rule.needs_review ? " · <span class='badge badge-review'>needs review</span>" : ""}</div>`
+      : "";
+    const taxesHtml = (duty || vat)
+      ? taxRow("Import duty", duty) + taxRow("VAT", vat)
+      : "<p class='rate-meta'>No tax rules loaded.</p>";
+
+    // Potential issues.
+    const issues = [];
+    if (!lhsMatch) issues.push("Drive-side mismatch — RHD destination vs assumed-LHD China vehicle.");
+    if (duty && duty.needs_review) issues.push("Import duty rate needs review — confirm with customs.");
+    if (vat && vat.needs_review) issues.push("VAT rate needs review — confirm with customs.");
+    if (rules.length === 0) issues.push("No import eligibility rules published yet — confirm age limits with authorities.");
+    const issuesHtml = issues.length
+      ? "<ul>" + issues.map((i) => `<li>${i}</li>`).join("") + "</ul>"
+      : "<p>No known issues with current data.</p>";
+
+    el("result").innerHTML =
+      `<div class="result-panel">
+        <h3>${brandName[model.brand_id]} ${model.name} → ${country.name}</h3>
+        <div class="result-line"><span>Drive side</span><span>${driveHtml}</span></div>
+        <div class="result-line"><span>Import eligibility</span><span>${rulesHtml}</span></div>
+        <div class="result-line"><span>Estimated taxes</span><span>${taxesHtml}</span></div>
+        <div class="result-line"><span>Potential issues</span><span>${issuesHtml}</span></div>
+        <div class="result-line"><span>Market notes</span><span><a href="${marketUrl}/countries/${countryId}/" target="_blank" rel="noopener">${country.name} market page →</a></span></div>
+      </div>` +
+      '<p class="rate-meta">Assumptions stated explicitly. Drive-side check assumes China-market vehicles are LHD. Verify all rules with official authorities.</p>';
+  }
+
+  el("vehicle").addEventListener("change", compute);
+  el("country").addEventListener("change", compute);
+  compute();
+</script>
