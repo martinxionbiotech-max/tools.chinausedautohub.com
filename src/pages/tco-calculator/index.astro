@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
-import { TOOLS_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import "../../styles/tools.css";
 
 const siteTitle = "China Used Car Export Tools";
@@ -54,7 +54,7 @@ const breadcrumb = {
   </div>
 
   <div class="section">
-    <h2>One-time costs</h2>
+    <h2>Inputs: one-time costs</h2>
     <div class="form-grid">
       <div class="field">
         <label for="purchase">Purchase price (USD)</label>
@@ -74,7 +74,7 @@ const breadcrumb = {
   </div>
 
   <div class="section">
-    <h2>Annual running costs</h2>
+    <h2>Inputs: annual running costs</h2>
     <div class="form-grid">
       <div class="field">
         <label for="energy">Fuel / charging per year (USD)</label>
@@ -107,7 +107,16 @@ const breadcrumb = {
   </div>
 
   <div class="section">
-    <h2>Calculation logic</h2>
+    <h2>Estimate vs. official quote vs. customs assessment</h2>
+    <ul>
+      <li><strong>Estimate</strong> — the figure this tool calculates, for planning only.</li>
+      <li><strong>Official quote</strong> — a binding figure confirmed with a supplier, freight forwarder or customs broker.</li>
+      <li><strong>Actual customs assessment</strong> — the destination customs authority's final determination.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Formula</h2>
     <div class="formula">Acquisition cost    = Purchase + Shipping + Duties & taxes
 Annual running cost = Fuel/charging + Maintenance + Insurance (per year)
 TCO over N years    = Acquisition + (Annual running cost × N)
@@ -124,6 +133,20 @@ Annual average      = TCO ÷ N</div>
   </div>
 
   <div class="section">
+  <div class="section">
+    <h2>Data source</h2>
+    <ul>
+      <li>No external price data — all inputs are user-supplied example assumptions.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Last updated</h2>
+    <ul>
+      <li>Last checked <strong>2026-10-04</strong>.</li>
+    </ul>
+  </div>
+
     <h2>Limitations</h2>
     <ul>
       <li>No fuel, electricity or insurance price data is published — enter your own researched figures.</li>
@@ -141,7 +164,17 @@ Annual average      = TCO ÷ N</div>
     </div>
   </div>
 
-  <div class="cta-band">
+    <div class="section">
+    <h2>Next steps</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/"}>Vehicle Data</a>
+      <a href={MARKET_SITE_URL + "/"}>Market Data</a>
+      <a href={MAIN_SITE_URL + "/cars/"}>Inventory</a>
+      <a href={MAIN_SITE_URL + "/contact/"}>Request Quote</a>
+    </div>
+  </div>
+
+<div class="cta-band">
     <h2>Request a vehicle</h2>
     <p>Ready to buy? Get a real quote on available vehicles.</p>
     <a class="btn" href={MAIN_SITE_URL + "/contact/"}>Request a Vehicle</a>

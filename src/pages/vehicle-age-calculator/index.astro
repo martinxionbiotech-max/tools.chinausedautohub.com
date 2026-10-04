@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
-import { TOOLS_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import importrulesData from "../../../shared/data/importrules.json";
 import "../../styles/tools.css";
@@ -94,6 +94,22 @@ const breadcrumb = {
   </div>
 
   <div class="section">
+    <h2>Estimate vs. official quote vs. customs assessment</h2>
+    <ul>
+      <li><strong>Estimate</strong> — the calculated age and fit check, for planning only.</li>
+      <li><strong>Official quote</strong> — confirm eligibility with a supplier or customs broker.</li>
+      <li><strong>Actual customs assessment</strong> — the destination customs authority's final determination.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Formula</h2>
+    <div class="formula">Age (months) = (current year − manufacture year) × 12 + (current month − manufacture month)
+Decimal years = Age (months) ÷ 12
+Compliance = compare decimal years against each destination's maximum-age rule</div>
+  </div>
+
+  <div class="section">
     <h2>Assumptions</h2>
     <ul>
       <li>Age is measured from the manufacture month to the current date (your browser's clock).</li>
@@ -103,6 +119,20 @@ const breadcrumb = {
   </div>
 
   <div class="section">
+  <div class="section">
+    <h2>Data source</h2>
+    <ul>
+      <li>Age limits: structured import-rule dataset (market data), each rule source-tracked.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Last updated</h2>
+    <ul>
+      <li>Age rules last checked <strong>2026-10-04</strong>.</li>
+    </ul>
+  </div>
+
     <h2>Limitations</h2>
     <ul>
       <li>Age rules are high-risk data and change; several are flagged "needs review" or lack a numeric limit.</li>
@@ -119,7 +149,17 @@ const breadcrumb = {
     </div>
   </div>
 
-  <div class="cta-band">
+    <div class="section">
+    <h2>Next steps</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/"}>Vehicle Data</a>
+      <a href={MARKET_SITE_URL + "/"}>Market Data</a>
+      <a href={MAIN_SITE_URL + "/cars/"}>Inventory</a>
+      <a href={MAIN_SITE_URL + "/contact/"}>Request Quote</a>
+    </div>
+  </div>
+
+<div class="cta-band">
     <h2>Request a vehicle</h2>
     <p>Ready to buy? Get a real quote on available vehicles.</p>
     <a class="btn" href={MAIN_SITE_URL + "/contact/"}>Request a Vehicle</a>

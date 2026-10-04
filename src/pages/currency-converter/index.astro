@@ -67,7 +67,7 @@ const breadcrumb = {
   </div>
 
   <div class="section">
-    <h2>Convert</h2>
+    <h2>Inputs</h2>
     <div class="form-grid">
       <div class="field">
         <label for="amount">Amount</label>
@@ -100,7 +100,16 @@ const breadcrumb = {
   </div>
 
   <div class="section">
-    <h2>Calculation logic</h2>
+    <h2>Estimate vs. official quote vs. customs assessment</h2>
+    <ul>
+      <li><strong>Estimate</strong> — the figure this tool calculates, for planning only.</li>
+      <li><strong>Official quote</strong> — a binding figure confirmed with a supplier, freight forwarder or customs broker.</li>
+      <li><strong>Actual customs assessment</strong> — the destination customs authority's final determination.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Formula</h2>
     <p>All rates are quoted against a USD base (units of local currency per 1 USD):</p>
     <div class="formula">USD → Local: amount × rate
 Local → USD: amount ÷ rate
@@ -125,10 +134,17 @@ A → B:      amount × (rate B ÷ rate A)</div>
   </div>
 
   <div class="section">
-    <h2>Source &amp; last updated</h2>
+    <h2>Data source</h2>
     <ul>
       <li>Rates source: {fxSource || "—"}, snapshot date <strong>{fxSourceDate || "—"}</strong>.</li>
       <li>Confidence: {fxConfidence || "unknown"}.</li>
+    </ul>
+  </div>
+
+    <div class="section">
+    <h2>Last updated</h2>
+    <ul>
+      <li>Last checked <strong>2026-10-04</strong>.</li>
     </ul>
   </div>
 
@@ -154,7 +170,17 @@ A → B:      amount × (rate B ÷ rate A)</div>
     </div>
   </div>
 
-  <div class="cta-band">
+    <div class="section">
+    <h2>Next steps</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/"}>Vehicle Data</a>
+      <a href={MARKET_SITE_URL + "/"}>Market Data</a>
+      <a href={MAIN_SITE_URL + "/cars/"}>Inventory</a>
+      <a href={MAIN_SITE_URL + "/contact/"}>Request Quote</a>
+    </div>
+  </div>
+
+<div class="cta-band">
     <h2>Request a vehicle</h2>
     <p>Ready to buy? Get a real quote on available vehicles.</p>
     <a class="btn" href={MAIN_SITE_URL + "/contact/"}>Request a Vehicle</a>

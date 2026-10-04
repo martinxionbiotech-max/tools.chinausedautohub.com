@@ -136,7 +136,16 @@ const faq = {
   </div>
 
   <div class="section">
-    <h2>Calculation logic</h2>
+    <h2>Estimate vs. official quote vs. customs assessment</h2>
+    <ul>
+      <li><strong>Estimate</strong> — the figure this tool calculates, for planning only.</li>
+      <li><strong>Official quote</strong> — a binding figure confirmed with a supplier, freight forwarder or customs broker.</li>
+      <li><strong>Actual customs assessment</strong> — the destination customs authority's final determination.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Formula</h2>
     <div class="formula">CIF value   = Vehicle price + Shipping + Insurance
 Import duty = CIF value × Import duty %   (standard or EV incentive rate)
 VAT         = (CIF value + Import duty) × VAT %
@@ -154,6 +163,22 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
   </div>
 
   <div class="section">
+  <div class="section">
+    <h2>Data source</h2>
+    <ul>
+      <li>Tax rules: public trade summaries (flagged needs review).</li>
+      <li>Exchange rates: structured FX dataset snapshot.</li>
+      <li>Country data: structured market dataset.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Last updated</h2>
+    <ul>
+      <li>Tax rules and exchange rates last checked <strong>2026-10-04</strong>.</li>
+    </ul>
+  </div>
+
     <h2>Limitations</h2>
     <ul>
       <li>EV duty incentives are policy measures that change frequently and are flagged "needs review".</li>
@@ -180,7 +205,17 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
     </div>
   </div>
 
-  <div class="cta-band">
+    <div class="section">
+    <h2>Next steps</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/"}>Vehicle Data</a>
+      <a href={MARKET_SITE_URL + "/"}>Market Data</a>
+      <a href={MAIN_SITE_URL + "/cars/"}>Inventory</a>
+      <a href={MAIN_SITE_URL + "/contact/"}>Request Quote</a>
+    </div>
+  </div>
+
+<div class="cta-band">
     <h2>Request a vehicle</h2>
     <p>Ready to buy an EV? Get a real quote on available vehicles.</p>
     <a class="btn" href={MAIN_SITE_URL + "/contact/"}>Request a Vehicle</a>
