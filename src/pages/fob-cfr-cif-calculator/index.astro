@@ -170,7 +170,7 @@ CIF = 23,000 + 200 = $23,200</div>
 </BaseLayout>
 
 <script>
-  import { calcIncoterms, fmtMoney } from "../../lib/calc.js";
+  import { calcIncoterms, fmtMoney, fmtEstimate } from "../../lib/calc.js";
 
   const el = (id) => document.getElementById(id);
   const ids = ["price", "export", "freight", "insurance"];
@@ -208,11 +208,11 @@ CIF = 23,000 + 200 = $23,200</div>
     el("result").innerHTML =
       line("Vehicle price", r.vehiclePrice) +
       line("China export costs", r.exportCosts) +
-      `<div class="result-total-row"><span>FOB (estimated)</span><span class="val">${fmtMoney(r.fob)}</span></div>` +
+      `<div class="result-total-row"><span>FOB</span><span class="val">${fmtEstimate(r.fob)}</span></div>` +
       line("Freight", r.freight) +
-      `<div class="result-total-row"><span>CFR (estimated)</span><span class="val">${fmtMoney(r.cfr)}</span></div>` +
+      `<div class="result-total-row"><span>CFR</span><span class="val">${fmtEstimate(r.cfr)}</span></div>` +
       line("Insurance", r.insurance) +
-      `<div class="result-total-row"><span>CIF (estimated)</span><span class="val">${fmtMoney(r.cif)}</span></div>` +
+      `<div class="result-total-row"><span>CIF</span><span class="val">${fmtEstimate(r.cif)}</span></div>` +
       '<p class="rate-meta">Estimates only — not contractual Incoterm quotes. Confirm each component with your forwarder and insurer.</p>';
   }
 

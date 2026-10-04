@@ -15,6 +15,15 @@ export function fmtMoney(n, currency = "USD") {
   return currency === "USD" ? "$" + s : s + " " + currency;
 }
 
+// Estimate formatter: rounds to whole units and prefixes "Estimated" so a
+// computed figure can never be mistaken for an exact quote or customs
+// assessment. Use for any output derived from estimated tax / freight / FX rules.
+export function fmtEstimate(n, currency = "USD") {
+  const v = Math.round(Number(n) || 0);
+  const s = v.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  return currency === "USD" ? "Estimated $" + s : "Estimated " + s + " " + currency;
+}
+
 // Landed cost: CIF = vehicle + shipping + insurance.
 // Duty basis "CIF value"; VAT basis "CIF + duty".
 export function calcLandedCost({

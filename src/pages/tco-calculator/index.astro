@@ -149,7 +149,7 @@ Annual average      = TCO ÷ N</div>
 </BaseLayout>
 
 <script>
-  import { calcTCO, fmtMoney } from "../../lib/calc.js";
+  import { calcTCO, fmtEstimate } from "../../lib/calc.js";
 
   const el = (id) => document.getElementById(id);
   const ids = ["purchase", "shipping", "duties", "energy", "maintenance", "insurance", "years"];
@@ -186,11 +186,11 @@ Annual average      = TCO ÷ N</div>
     const line = (label, v, cls = "") =>
       `<div class="result-line ${cls}"><span>${label}</span><span class="val">${v}</span></div>`;
     el("result").innerHTML =
-      `<div class="result-total-row"><span>Acquisition cost (one-time)</span><span class="val">${fmtMoney(r.acquisition)}</span></div>` +
-      line("Annual running cost (estimated)", fmtMoney(r.annualOperating)) +
-      line(`Running cost over ${r.years} years`, fmtMoney(r.operatingOverPeriod)) +
-      `<div class="result-total-row"><span>${r.years}-year TCO (estimated)</span><span class="val">${fmtMoney(r.totalTCO)}</span></div>` +
-      `<div class="result-total-row"><span>Average per year</span><span class="val">${fmtMoney(r.annualAverage)}</span></div>` +
+      `<div class="result-total-row"><span>Acquisition cost (one-time)</span><span class="val">${fmtEstimate(r.acquisition)}</span></div>` +
+      line("Annual running cost", fmtEstimate(r.annualOperating)) +
+      line(`Running cost over ${r.years} years`, fmtEstimate(r.operatingOverPeriod)) +
+      `<div class="result-total-row"><span>${r.years}-year TCO</span><span class="val">${fmtEstimate(r.totalTCO)}</span></div>` +
+      `<div class="result-total-row"><span>Average per year</span><span class="val">${fmtEstimate(r.annualAverage)}</span></div>` +
       '<p class="rate-meta">Estimates only, based on your example assumptions. Adjust inputs to your real case.</p>';
   }
 

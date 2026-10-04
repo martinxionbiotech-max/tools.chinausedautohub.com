@@ -191,7 +191,7 @@ Estimated landed cost = $33,915</div>
 <script type="application/json" id="tax-by-country" set:html={JSON.stringify(taxByCountry)}></script>
 <script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL })}></script>
 <script>
-  import { calcLandedCost, fmtMoney } from "../../lib/calc.js";
+  import { calcLandedCost, fmtMoney, fmtEstimate } from "../../lib/calc.js";
 
   const taxByCountry = JSON.parse(document.getElementById("tax-by-country").textContent);
   const marketUrl = JSON.parse(document.getElementById("site-config").textContent).marketUrl;
@@ -270,16 +270,18 @@ Estimated landed cost = $33,915</div>
 
     const line = (label, v) =>
       `<div class="result-line"><span>${label}</span><span class="val">${fmtMoney(v)}</span></div>`;
+    const eline = (label, v) =>
+      `<div class="result-line"><span>${label}</span><span class="val">${fmtEstimate(v)}</span></div>`;
     el("result").innerHTML =
       line("Vehicle cost", r.vehicleCost) +
       line("Shipping", r.shipping) +
       line("Insurance", r.insurance) +
-      line("Import duty (estimated)", r.importDuty) +
-      line("VAT (estimated)", r.vat) +
+      eline("Import duty", r.importDuty) +
+      eline("VAT", r.vat) +
       line("Port charges", r.portCharges) +
       line("Other local fees", r.localFees) +
-      `<div class="result-total-row"><span>Estimated landed cost</span><span class="val">${fmtMoney(r.total)}</span></div>` +
-      '<p class="rate-meta">All figures are estimates. Verify current duty/VAT and FX before transacting.</p>';
+      `<div class="result-total-row"><span>Estimated landed cost</span><span class="val">${fmtEstimate(r.total)}</span></div>` +
+      '<p class="rate-meta">Estimated figures — not an exact quote. Verify current duty/VAT and FX before transacting.</p>';
   }
 
   for (const id of ids) el(id).addEventListener("input", compute);

@@ -207,7 +207,7 @@ const faq = {
 <script type="application/json" id="routes-data" set:html={JSON.stringify(routes)}></script>
 <script type="application/json" id="ports-data" set:html={JSON.stringify(ports)}></script>
 <script>
-  import { calcFreightTotal, findRouteDays, fmtMoney } from "../../lib/calc.js";
+  import { calcFreightTotal, findRouteDays, fmtEstimate } from "../../lib/calc.js";
 
   const routes = JSON.parse(document.getElementById("routes-data").textContent);
   const ports = JSON.parse(document.getElementById("ports-data").textContent);
@@ -249,11 +249,11 @@ const faq = {
       ratePerCar: vals.rateCar, carCount: vals.carCount,
       ratePerTon: vals.rateTon, tonnage: vals.tonnage,
     });
-    const line = (label, v) => `<div class="result-line"><span>${label}</span><span class="val">${fmtMoney(v)}</span></div>`;
+    const line = (label, v) => `<div class="result-line"><span>${label}</span><span class="val">${fmtEstimate(v)}</span></div>`;
     el("freight").innerHTML =
       (vals.carCount || vals.rateCar ? line("RoRo freight (your rate × cars)", r.carTotal) : "") +
       (vals.tonnage || vals.rateTon ? line("Container freight (your rate × tons)", r.tonTotal) : "") +
-      `<div class="result-total-row"><span>Estimated freight (your figures)</span><span class="val">${fmtMoney(r.total)}</span></div>` +
+      `<div class="result-total-row"><span>Freight estimate (your figures)</span><span class="val">${fmtEstimate(r.total)}</span></div>` +
       '<p class="rate-meta">Built only from your entered rates — not a quote. Request real quotes from logistics providers.</p>';
   }
 

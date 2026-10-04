@@ -190,7 +190,7 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
 <script type="application/json" id="tax-by-country" set:html={JSON.stringify(taxByCountry)}></script>
 <script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL })}></script>
 <script>
-  import { calcLandedCost, fmtMoney } from "../../lib/calc.js";
+  import { calcLandedCost, fmtMoney, fmtEstimate } from "../../lib/calc.js";
 
   const taxByCountry = JSON.parse(document.getElementById("tax-by-country").textContent);
   const marketUrl = JSON.parse(document.getElementById("site-config").textContent).marketUrl;
@@ -269,7 +269,7 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
         dutyRatePct: std.rate_pct, vatRatePct: (vat && vat.rate_pct) || 0,
       });
       html +=
-        `<div class="result-total-row"><span>Landed cost — standard duty ${std.rate_pct}%</span><span class="val">${fmtMoney(stdR.total)}</span></div>`;
+        `<div class="result-total-row"><span>Landed cost — standard duty ${std.rate_pct}%</span><span class="val">${fmtEstimate(stdR.total)}</span></div>`;
     }
     if (ev && ev.taxrule_id !== (std && std.taxrule_id)) {
       const evR = calcLandedCost({
@@ -277,7 +277,7 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
         dutyRatePct: ev.rate_pct, vatRatePct: (vat && vat.rate_pct) || 0,
       });
       html +=
-        `<div class="result-total-row"><span>Landed cost — EV incentive duty ${ev.rate_pct}%</span><span class="val">${fmtMoney(evR.total)}</span></div>`;
+        `<div class="result-total-row"><span>Landed cost — EV incentive duty ${ev.rate_pct}%</span><span class="val">${fmtEstimate(evR.total)}</span></div>`;
     }
 
     el("result").innerHTML = html +

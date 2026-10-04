@@ -148,7 +148,7 @@ ROI          = 4,500 ÷ 30,500 = 14.8%</div>
 </BaseLayout>
 
 <script>
-  import { calcProfit, fmtMoney } from "../../lib/calc.js";
+  import { calcProfit, fmtEstimate } from "../../lib/calc.js";
 
   const el = (id) => document.getElementById(id);
   const ids = ["purchase", "shipping", "tax", "local", "selling"];
@@ -188,8 +188,8 @@ ROI          = 4,500 ÷ 30,500 = 14.8%</div>
     const line = (label, v, cls = "") =>
       `<div class="result-line ${cls}"><span>${label}</span><span class="val">${v}</span></div>`;
     el("result").innerHTML =
-      line("Total cost (estimated)", fmtMoney(r.totalCost)) +
-      line("Gross profit (estimated)", fmtMoney(r.grossProfit), r.grossProfit < 0 ? "loss" : "") +
+      line("Total cost", fmtEstimate(r.totalCost)) +
+      line("Gross profit", fmtEstimate(r.grossProfit), r.grossProfit < 0 ? "loss" : "") +
       `<div class="result-total-row"><span>Gross margin</span><span class="val">${pct(r.marginPct)}</span></div>` +
       `<div class="result-total-row"><span>ROI</span><span class="val">${pct(r.roiPct)}</span></div>` +
       '<p class="rate-meta">Estimates only. Verify tax, fees and FX before transacting.</p>';

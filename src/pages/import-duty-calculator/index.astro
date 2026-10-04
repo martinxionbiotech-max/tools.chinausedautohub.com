@@ -183,7 +183,7 @@ Total tax = $9,000</div>
 <script type="application/json" id="tax-by-country" set:html={JSON.stringify(taxByCountry)}></script>
 <script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL })}></script>
 <script>
-  import { calcDuty, fmtMoney } from "../../lib/calc.js";
+  import { calcDuty, fmtEstimate } from "../../lib/calc.js";
 
   const taxByCountry = JSON.parse(document.getElementById("tax-by-country").textContent);
   const marketUrl = JSON.parse(document.getElementById("site-config").textContent).marketUrl;
@@ -246,11 +246,11 @@ Total tax = $9,000</div>
     });
 
     const line = (label, v) =>
-      `<div class="result-line"><span>${label}</span><span class="val">${fmtMoney(v)}</span></div>`;
+      `<div class="result-line"><span>${label}</span><span class="val">${fmtEstimate(v)}</span></div>`;
     el("result").innerHTML =
-      line("Import duty (estimated)", r.duty) +
-      line("VAT (estimated)", r.vat) +
-      `<div class="result-total-row"><span>Total tax (estimated)</span><span class="val">${fmtMoney(r.total)}</span></div>` +
+      line("Import duty", r.duty) +
+      line("VAT", r.vat) +
+      `<div class="result-total-row"><span>Total tax</span><span class="val">${fmtEstimate(r.total)}</span></div>` +
       '<p class="rate-meta">Estimated based on available rules — check current regulations. Age/engine bands not modeled.</p>';
   }
 
