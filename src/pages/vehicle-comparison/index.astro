@@ -39,6 +39,7 @@ const breadcrumb = {
   title="Vehicle Comparison — China Used Car Export"
   description="Compare Chinese-market vehicles side by side: body, powertrain, dimensions, wheelbase, battery, range and seats. Full specs link to the data site; prices link to the main site."
   canonical="/vehicle-comparison/"
+  lastUpdated="2026-10-04"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -90,6 +91,28 @@ const breadcrumb = {
       <li>Missing fields render as "Not available" rather than estimates.</li>
       <li>Specifications reflect the China market and may differ for export variants.</li>
     </ul>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>One representative trim per model is shown (first trim of the first generation).</li>
+      <li>Specifications are the China-market published values.</li>
+      <li>Missing values are shown as "Not available" — never estimated or fabricated.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Source &amp; last updated</h2>
+    <ul>
+      <li>Vehicle specifications come from the structured data site, source-tracked per value.</li>
+      <li>Specification data last updated <strong>2026-10-04</strong>.</li>
+      <li>Prices are not listed here — they live on the main site.</li>
+    </ul>
+  </div>
+
+  <div class="note warn">
+    <strong>Disclaimer:</strong> Specifications may vary by market / trim / source and are for comparison only.
   </div>
 
   <div class="section">

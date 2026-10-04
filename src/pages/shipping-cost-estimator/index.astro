@@ -1,0 +1,266 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, COMPANIES_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import portsData from "../../../shared/data/ports.json";
+import routesData from "../../../shared/data/routes.json";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/shipping-cost-estimator/";
+
+const ports = portsData.ports;
+const routes = routesData.routes;
+const originPorts = ports.filter((p) => p.type === "origin");
+const destPorts = ports.filter((p) => p.type === "destination");
+const routesLastChecked = [...new Set(routes.map((r) => r.last_checked).filter(Boolean))].join(", ");
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Shipping Cost Estimator",
+  url: pageUrl,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description: "Estimate transit days between a Chinese origin port and a destination port for RoRo and container shipping, and build a freight estimate from your own rate assumptions. No unverified freight prices are published.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Shipping Cost Estimator", item: pageUrl },
+  ],
+};
+
+const faq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Why does this tool not show freight prices?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Freight rates are negotiated per shipment and change constantly with fuel, space, season and route. Publishing a fixed rate would be misleading, so this tool shows estimated transit days and lets you enter your own freight assumptions.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I get a real shipping quote?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Request quotes from logistics and freight-forwarding providers on the Companies directory. Provide the origin port, destination port and shipping method (RoRo or container) to get a binding rate.",
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Shipping Cost Estimator — China Used Car Export"
+  description="Estimate transit days between a Chinese origin port and a destination port for RoRo and container shipping, plus a freight total built from your own rate assumptions. We never publish unverified freight prices."
+  canonical="/shipping-cost-estimator/"
+  jsonLd={[webApp, breadcrumb, faq]}
+  lastUpdated={routesLastChecked}
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Shipping Cost Estimator", url: pageUrl },
+  ]}
+>
+  <h1>Shipping Cost Estimator</h1>
+  <p class="lede">
+    Estimate the transit time for a route and build a freight figure from your
+    own rate assumptions. We do <strong>not</strong> publish freight prices —
+    they are negotiated per shipment and change constantly.
+  </p>
+
+  <div class="note info">
+    Freight rates are <strong>not listed</strong> on this site. They are negotiated
+    per shipment. Use the transit estimate below and enter your own freight
+    assumptions, then request real quotes from logistics providers.
+  </div>
+
+  <div class="section">
+    <h2>Route</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="origin">Origin port (China)</label>
+        <select id="origin">
+          {originPorts.map((p) => <option value={p.port_id}>{p.name}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="dest">Destination port</label>
+        <select id="dest">
+          {destPorts.map((p) => <option value={p.port_id}>{p.name}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="method">Shipping method</label>
+        <select id="method">
+          <option value="roro">RoRo (roll-on / roll-off)</option>
+          <option value="container">Container</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Estimated transit time</h2>
+    <div class="result-panel" id="transit">
+      <p class="rate-meta">Select a route to see the estimated transit days.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Freight estimate (your own assumptions)</h2>
+    <p class="rate-meta">
+      Enter your own negotiated rates below. RoRo is usually quoted per car;
+      container cargo is often quoted per ton. Leave a field blank if it does not apply.
+    </p>
+    <div class="form-grid">
+      <div class="field">
+        <label for="rateCar">RoRo rate per car (USD)</label>
+        <input id="rateCar" type="number" inputmode="decimal" min="0" step="any" placeholder="your estimate" />
+      </div>
+      <div class="field">
+        <label for="carCount">Number of cars</label>
+        <input id="carCount" type="number" inputmode="numeric" min="0" step="any" placeholder="e.g. 3" />
+      </div>
+      <div class="field">
+        <label for="rateTon">Container rate per ton (USD)</label>
+        <input id="rateTon" type="number" inputmode="decimal" min="0" step="any" placeholder="your estimate" />
+      </div>
+      <div class="field">
+        <label for="tonnage">Total tonnage</label>
+        <input id="tonnage" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 12" />
+      </div>
+    </div>
+    <p class="form-error" id="error"></p>
+    <div class="result-panel" id="freight">
+      <p class="rate-meta">Enter a rate to build your freight estimate.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>Transit days are industry route estimates (min–max), not guarantees — weather, port congestion and schedule vary.</li>
+      <li>Freight is calculated only from the rates <strong>you</strong> enter; no unit rate is assumed or published.</li>
+      <li>This estimator does not include origin port charges, destination handling, customs or inland transport.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>Route data is flagged low/medium confidence and covers a subset of China ports and destination ports.</li>
+      <li>If a route pair has no entry, no transit estimate is shown — we do not invent one.</li>
+      <li>Freight is a negotiated cost; actual quotes vary by carrier, season, vehicle size and fuel.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Get a real quote</h2>
+    <p>
+      Request quotes from logistics and freight-forwarding providers listed on the
+      Companies directory, or ask your freight forwarder directly with your route
+      and method.
+    </p>
+    <div class="related-grid">
+      <a href={COMPANIES_SITE_URL + "/"}>Browse logistics providers →</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
+      <a href={TOOLS_SITE_URL + "/fob-cfr-cif-calculator/"}>FOB / CFR / CIF Calculator</a>
+      <a href={TOOLS_SITE_URL + "/currency-converter/"}>Currency Converter</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      <a href={MARKET_SITE_URL + "/countries/kenya/"}>Kenya</a>
+      <a href={MARKET_SITE_URL + "/countries/tanzania/"}>Tanzania</a>
+      <a href={MARKET_SITE_URL + "/countries/nigeria/"}>Nigeria</a>
+      <a href={MARKET_SITE_URL + "/countries/uae/"}>United Arab Emirates</a>
+      <a href={MARKET_SITE_URL + "/countries/saudi-arabia/"}>Saudi Arabia</a>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to ship? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script type="application/json" id="routes-data" set:html={JSON.stringify(routes)}></script>
+<script type="application/json" id="ports-data" set:html={JSON.stringify(ports)}></script>
+<script>
+  import { calcFreightTotal, findRouteDays, fmtMoney } from "../../lib/calc.js";
+
+  const routes = JSON.parse(document.getElementById("routes-data").textContent);
+  const ports = JSON.parse(document.getElementById("ports-data").textContent);
+  const el = (id) => document.getElementById(id);
+
+  const portName = Object.fromEntries(ports.map((p) => [p.port_id, p.name]));
+
+  function num(id) {
+    const v = el(id).value.trim();
+    if (v === "") return 0;
+    const n = Number(v);
+    return Number.isFinite(n) && n >= 0 ? n : NaN;
+  }
+
+  function renderTransit() {
+    const r = findRouteDays(routes, el("origin").value, el("dest").value, el("method").value);
+    const box = el("transit");
+    if (!r) {
+      box.innerHTML =
+        '<p class="rate-meta">No route estimate is published for this port pair. Request transit time from your freight forwarder — we do not invent route data.</p>';
+      return;
+    }
+    const methodLabel = r.method === "roro" ? "RoRo" : "Container";
+    const confFlag = r.confidence === "low" ? ' <span class="badge badge-review">low confidence</span>' : "";
+    box.innerHTML =
+      `<div class="result-line"><span>${portName[el("origin").value]} → ${portName[el("dest").value]}</span><span class="val">${r.estDaysMin}–${r.estDaysMax} days</span></div>` +
+      `<div class="rate-meta">Method: ${methodLabel}${confFlag} · Source: ${r.source || "—"} · Last checked: ${r.lastChecked || "—"}</div>` +
+      '<p class="rate-meta">Estimated transit range only — schedules vary. Not a delivery guarantee.</p>';
+  }
+
+  function renderFreight() {
+    const vals = { rateCar: num("rateCar"), carCount: num("carCount"), rateTon: num("rateTon"), tonnage: num("tonnage") };
+    const err = el("error");
+    for (const k of ["rateCar", "carCount", "rateTon", "tonnage"]) {
+      if (Number.isNaN(vals[k])) { err.textContent = "All freight inputs must be non-negative numbers."; return; }
+    }
+    err.textContent = "";
+    const r = calcFreightTotal({
+      ratePerCar: vals.rateCar, carCount: vals.carCount,
+      ratePerTon: vals.rateTon, tonnage: vals.tonnage,
+    });
+    const line = (label, v) => `<div class="result-line"><span>${label}</span><span class="val">${fmtMoney(v)}</span></div>`;
+    el("freight").innerHTML =
+      (vals.carCount || vals.rateCar ? line("RoRo freight (your rate × cars)", r.carTotal) : "") +
+      (vals.tonnage || vals.rateTon ? line("Container freight (your rate × tons)", r.tonTotal) : "") +
+      `<div class="result-total-row"><span>Estimated freight (your figures)</span><span class="val">${fmtMoney(r.total)}</span></div>` +
+      '<p class="rate-meta">Built only from your entered rates — not a quote. Request real quotes from logistics providers.</p>';
+  }
+
+  function compute() { renderTransit(); renderFreight(); }
+
+  ["origin", "dest", "method", "rateCar", "carCount", "rateTon", "tonnage"].forEach((id) =>
+    el(id).addEventListener("input", compute),
+  );
+  compute();
+</script>

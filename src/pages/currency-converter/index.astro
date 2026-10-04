@@ -47,6 +47,7 @@ const breadcrumb = {
   title="Currency Converter — China Used Car Export"
   description="Convert between USD and the seven destination-market currencies at the latest snapshot rates. Rates are dated and flagged as fluctuating."
   canonical="/currency-converter/"
+  lastUpdated={fxSourceDate}
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -112,6 +113,27 @@ A → B:      amount × (rate B ÷ rate A)</div>
       <li>Rates are a single snapshot (<strong>{fxSourceDate || "unknown date"}</strong>); live market rates differ.</li>
       <li>No mid-market vs. bank spread adjustment — actual FX transactions incur fees.</li>
     </ul>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>All rates are quoted against a USD base (units of local currency per 1 USD).</li>
+      <li>Cross-currency conversion goes through USD as the pivot.</li>
+      <li>Rates are a single snapshot, not live or mid-market.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Source &amp; last updated</h2>
+    <ul>
+      <li>Rates source: {fxSource || "—"}, snapshot date <strong>{fxSourceDate || "—"}</strong>.</li>
+      <li>Confidence: {fxConfidence || "unknown"}.</li>
+    </ul>
+  </div>
+
+  <div class="note warn">
+    <strong>Disclaimer:</strong> Estimate ≠ final quotation. Exchange rates fluctuate — confirm the current rate before transacting.
   </div>
 
   <div class="section">

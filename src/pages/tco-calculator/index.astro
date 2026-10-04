@@ -1,0 +1,199 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/tco-calculator/";
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Total Cost of Ownership Calculator",
+  url: pageUrl,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "Estimate the 5-year total cost of ownership of a used vehicle — purchase, shipping, duties, plus annual fuel/charging, maintenance and insurance — with adjustable example assumptions.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Total Cost of Ownership Calculator", item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Total Cost of Ownership Calculator — China Used Car Export"
+  description="Estimate the 5-year total cost of ownership of a used vehicle: purchase, shipping, duties and taxes, plus annual fuel/charging, maintenance and insurance. All inputs are adjustable example assumptions."
+  canonical="/tco-calculator/"
+  jsonLd={[webApp, breadcrumb]}
+  lastUpdated="2026-10-04"
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Total Cost of Ownership Calculator", url: pageUrl },
+  ]}
+>
+  <h1>Total Cost of Ownership Calculator</h1>
+  <p class="lede">
+    Estimate the five-year total cost of ownership of a used vehicle. Every
+    input is a pre-filled example assumption — adjust each to your case.
+  </p>
+
+  <div class="note info">
+    Fuel/charging prices and local running costs are <strong>not</strong> published
+    here (no verified source). The defaults below are example assumptions —
+    adjust them to your own situation.
+  </div>
+
+  <div class="section">
+    <h2>One-time costs</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="purchase">Purchase price (USD)</label>
+        <input id="purchase" type="number" inputmode="decimal" min="0" step="any" value="20000" />
+      </div>
+      <div class="field">
+        <label for="shipping">Shipping (USD)</label>
+        <input id="shipping" type="number" inputmode="decimal" min="0" step="any" value="2500" />
+        <span class="hint">Example assumption — adjust to your case.</span>
+      </div>
+      <div class="field">
+        <label for="duties">Duties &amp; taxes (USD)</label>
+        <input id="duties" type="number" inputmode="decimal" min="0" step="any" value="9000" />
+        <span class="hint">Example assumption — use the Import Duty Calculator for a real figure.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Annual running costs</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="energy">Fuel / charging per year (USD)</label>
+        <input id="energy" type="number" inputmode="decimal" min="0" step="any" value="800" />
+        <span class="hint">Example assumption — no fuel/electricity prices published here.</span>
+      </div>
+      <div class="field">
+        <label for="maintenance">Maintenance per year (USD)</label>
+        <input id="maintenance" type="number" inputmode="decimal" min="0" step="any" value="500" />
+        <span class="hint">Example assumption — adjust to your case.</span>
+      </div>
+      <div class="field">
+        <label for="insurance">Insurance per year (USD)</label>
+        <input id="insurance" type="number" inputmode="decimal" min="0" step="any" value="700" />
+        <span class="hint">Example assumption — adjust to your case.</span>
+      </div>
+      <div class="field">
+        <label for="years">Holding period (years)</label>
+        <input id="years" type="number" inputmode="numeric" min="1" max="20" step="1" value="5" />
+      </div>
+    </div>
+    <p class="form-error" id="error"></p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated result</h2>
+    <div class="result-panel" id="result">
+      <p class="rate-meta">Adjust the inputs to see the total cost of ownership.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Calculation logic</h2>
+    <div class="formula">Acquisition cost    = Purchase + Shipping + Duties & taxes
+Annual running cost = Fuel/charging + Maintenance + Insurance (per year)
+TCO over N years    = Acquisition + (Annual running cost × N)
+Annual average      = TCO ÷ N</div>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>All inputs are example assumptions you should adjust to your own case.</li>
+      <li>Running costs are assumed constant each year (no inflation or depreciation modeled).</li>
+      <li>No resale value is deducted — this is gross cost of ownership, not net.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>No fuel, electricity or insurance price data is published — enter your own researched figures.</li>
+      <li>Does not model depreciation, financing, inflation or unexpected repairs.</li>
+      <li>Local running costs vary widely by country and usage.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
+      <a href={TOOLS_SITE_URL + "/profit-calculator/"}>Profit Calculator</a>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to buy? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script>
+  import { calcTCO, fmtMoney } from "../../lib/calc.js";
+
+  const el = (id) => document.getElementById(id);
+  const ids = ["purchase", "shipping", "duties", "energy", "maintenance", "insurance", "years"];
+
+  function num(id) {
+    const v = el(id).value.trim();
+    if (v === "") return 0;
+    const n = Number(v);
+    return Number.isFinite(n) && n >= 0 ? n : NaN;
+  }
+
+  function compute() {
+    const vals = {};
+    let ok = true;
+    for (const id of ids) {
+      vals[id] = num(id);
+      if (Number.isNaN(vals[id])) { ok = false; el(id).classList.add("invalid"); }
+      else el(id).classList.remove("invalid");
+    }
+    const err = el("error");
+    if (!ok) {
+      err.textContent = "All inputs must be non-negative numbers.";
+      el("result").innerHTML = '<p class="rate-meta">Fix the highlighted fields to see the result.</p>';
+      return;
+    }
+    err.textContent = "";
+
+    const r = calcTCO({
+      purchase: vals.purchase, shipping: vals.shipping, duties: vals.duties,
+      annualEnergy: vals.energy, annualMaintenance: vals.maintenance, annualInsurance: vals.insurance,
+      years: vals.years,
+    });
+
+    const line = (label, v, cls = "") =>
+      `<div class="result-line ${cls}"><span>${label}</span><span class="val">${v}</span></div>`;
+    el("result").innerHTML =
+      `<div class="result-total-row"><span>Acquisition cost (one-time)</span><span class="val">${fmtMoney(r.acquisition)}</span></div>` +
+      line("Annual running cost (estimated)", fmtMoney(r.annualOperating)) +
+      line(`Running cost over ${r.years} years`, fmtMoney(r.operatingOverPeriod)) +
+      `<div class="result-total-row"><span>${r.years}-year TCO (estimated)</span><span class="val">${fmtMoney(r.totalTCO)}</span></div>` +
+      `<div class="result-total-row"><span>Average per year</span><span class="val">${fmtMoney(r.annualAverage)}</span></div>` +
+      '<p class="rate-meta">Estimates only, based on your example assumptions. Adjust inputs to your real case.</p>';
+  }
+
+  for (const id of ids) el(id).addEventListener("input", compute);
+  compute();
+</script>

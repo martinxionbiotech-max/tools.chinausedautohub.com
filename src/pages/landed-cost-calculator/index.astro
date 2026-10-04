@@ -45,6 +45,7 @@ const breadcrumb = {
   title="Landed Cost Calculator — China Used Car Export"
   description="Estimate the total landed cost of importing a used vehicle: vehicle price, shipping, insurance, import duty, VAT, port charges and local fees. Transparent formulas with source and date for every rate."
   canonical="/landed-cost-calculator/"
+  lastUpdated="2026-10-04"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -126,6 +127,28 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT + Port charges + Other
       <li>Excludes destination-port incidental fees not entered, inland transport, and any age/engine-specific duty bands not modeled.</li>
       <li>Shipping is user-entered; we never publish unverified freight quotes.</li>
     </ul>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>Duty is applied to CIF value; VAT is applied to CIF + duty (per each stored tax-rule <code>basis</code>).</li>
+      <li>Shipping, insurance, port charges and local fees are the figures you enter — none are assumed.</li>
+      <li>Flat baseline duty and VAT rates are used; age/engine-specific duty bands are not modeled.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Source &amp; last updated</h2>
+    <ul>
+      <li>Tax rules: public trade summaries, last checked <strong>2026-10-04</strong> (flagged needs review).</li>
+      <li>Exchange rates: snapshot dated <strong>2026-10-04</strong>.</li>
+      <li>Country data: structured market dataset.</li>
+    </ul>
+  </div>
+
+  <div class="note warn">
+    <strong>Disclaimer:</strong> Estimate ≠ final quotation. Confirm current duty, VAT and FX with official authorities before transacting.
   </div>
 
   <div class="section">

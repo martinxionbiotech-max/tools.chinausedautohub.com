@@ -45,15 +45,33 @@ const tools = [
   },
   {
     name: "Shipping Cost Estimator",
-    url: null,
-    desc: "Route-based freight estimates (RoRo / container). Coming soon — no unverified rates published.",
-    done: false,
+    url: "/shipping-cost-estimator/",
+    desc: "Estimate transit days between China ports and destination ports, and build a freight figure from your own rate assumptions. No unverified freight prices published.",
+    done: true,
+  },
+  {
+    name: "FOB / CFR / CIF Calculator",
+    url: "/fob-cfr-cif-calculator/",
+    desc: "Build up FOB, CFR and CIF Incoterm values from vehicle price, China export costs, freight and insurance.",
+    done: true,
+  },
+  {
+    name: "Vehicle Age Calculator",
+    url: "/vehicle-age-calculator/",
+    desc: "Calculate a vehicle's age from its manufacture date and compare it against destination-country age limits.",
+    done: true,
+  },
+  {
+    name: "EV Import Cost Calculator",
+    url: "/ev-import-cost-calculator/",
+    desc: "Estimate the landed cost of an EV, comparing standard duty against any EV-specific incentive rate.",
+    done: true,
   },
   {
     name: "Total Cost of Ownership",
-    url: null,
-    desc: "Multi-year running costs including duties, insurance, and depreciation. Coming soon.",
-    done: false,
+    url: "/tco-calculator/",
+    desc: "Estimate 5-year total cost of ownership: purchase, shipping, duties, plus annual fuel/charging, maintenance and insurance.",
+    done: true,
   },
 ];
 
@@ -75,7 +93,7 @@ const itemList = {
   siteUrl={TOOLS_SITE_URL}
   currentSection="tools"
   title="Decision Tools — China Used Car Export"
-  description="Free decision tools for used car export: landed cost, import duty, profit, vehicle comparison, market compatibility and currency conversion. Transparent formulas with sources and dates."
+  description="Free decision tools for used car export: landed cost, import duty, profit, vehicle comparison, market compatibility, currency conversion, shipping, Incoterms, vehicle age, EV import and total cost of ownership. Transparent formulas with sources and dates."
   canonical="/"
   jsonLd={itemList}
 >

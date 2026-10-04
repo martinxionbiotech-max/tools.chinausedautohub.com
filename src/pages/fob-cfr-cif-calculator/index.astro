@@ -1,0 +1,221 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/fob-cfr-cif-calculator/";
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "FOB / CFR / CIF Calculator",
+  url: pageUrl,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "Build up FOB, CFR and CIF Incoterm values for a used vehicle export: vehicle price plus China export costs, then freight, then insurance. Transparent formulas and assumptions.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "FOB / CFR / CIF Calculator", item: pageUrl },
+  ],
+};
+
+const faq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What is the difference between FOB, CFR and CIF?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "FOB (Free On Board) is the vehicle price plus China export costs up to the port of departure. CFR (Cost and Freight) adds the ocean freight to the destination port. CIF (Cost, Insurance and Freight) adds marine insurance on top of CFR. Each term shifts who pays and who bears risk at each stage.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Which Incoterm should I use?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "It depends on your deal. Buyers often compare CIF because it gives a single delivered-to-port cost. Confirm which term your contract and insurance actually use, and verify each cost component with your freight forwarder and insurer.",
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="FOB / CFR / CIF Calculator — China Used Car Export"
+  description="Build up FOB, CFR and CIF Incoterm values for a used vehicle export from vehicle price, China export costs, freight and insurance. Transparent formulas and assumptions."
+  canonical="/fob-cfr-cif-calculator/"
+  jsonLd={[webApp, breadcrumb, faq]}
+  lastUpdated="2026-10-04"
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "FOB / CFR / CIF Calculator", url: pageUrl },
+  ]}
+>
+  <h1>FOB / CFR / CIF Calculator</h1>
+  <p class="lede">
+    Build up the three common Incoterm values for a used vehicle export —
+    FOB, CFR and CIF — from the price and your own cost assumptions.
+  </p>
+
+  <div class="section">
+    <h2>What these terms mean</h2>
+    <ul>
+      <li><strong>FOB (Free On Board)</strong> — the vehicle price plus all China-side export costs (inland transport, export documentation, customs clearance) up to loading at the departure port. Risk transfers to the buyer once on board.</li>
+      <li><strong>CFR (Cost and Freight)</strong> — FOB plus the ocean freight to the destination port. The seller arranges (and pays) freight; the buyer bears the risk during transit.</li>
+      <li><strong>CIF (Cost, Insurance and Freight)</strong> — CFR plus marine insurance. A single figure representing cost delivered to the destination port, including insurance.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Inputs</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="price">Vehicle price (USD)</label>
+        <input id="price" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 20000" />
+      </div>
+      <div class="field">
+        <label for="export">China export costs (USD)</label>
+        <input id="export" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 500" />
+        <span class="hint">Inland transport, documentation, export clearance. You provide this.</span>
+      </div>
+      <div class="field">
+        <label for="freight">Freight (USD)</label>
+        <input id="freight" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 2500" />
+        <span class="hint">Ocean freight to destination. You provide this — we do not publish freight rates.</span>
+      </div>
+      <div class="field">
+        <label for="insurance">Insurance (USD)</label>
+        <input id="insurance" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 200" />
+      </div>
+    </div>
+    <p class="form-error" id="error"></p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated result</h2>
+    <div class="result-panel" id="result">
+      <p class="rate-meta">Enter a vehicle price to see the Incoterm values.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Calculation logic</h2>
+    <div class="formula">FOB = Vehicle price + China export costs
+CFR = FOB + Freight
+CIF = CFR + Insurance</div>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>Export costs, freight and insurance are the figures you enter — none are assumed.</li>
+      <li>Insurance here is marine cargo insurance on the declared value; your actual policy may differ.</li>
+      <li>All values are estimates for comparison, not contractual Incoterm quotes.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>Does not include destination-port handling, customs duty, VAT or inland delivery.</li>
+      <li>Does not model Incoterm 2020 nuance such as FCA/CPT/CIP or insurance coverage levels.</li>
+      <li>Freight is negotiated per shipment and varies — request real quotes.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Example</h2>
+    <p>A $20,000 vehicle with $500 export costs, $2,500 freight and $200 insurance:</p>
+    <div class="formula">FOB = 20,000 + 500 = $20,500
+CFR = 20,500 + 2,500 = $23,000
+CIF = 23,000 + 200 = $23,200</div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
+      <a href={TOOLS_SITE_URL + "/shipping-cost-estimator/"}>Shipping Cost Estimator</a>
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      <a href={MARKET_SITE_URL + "/countries/kenya/"}>Kenya</a>
+      <a href={MARKET_SITE_URL + "/countries/uae/"}>United Arab Emirates</a>
+      <a href={MARKET_SITE_URL + "/countries/nigeria/"}>Nigeria</a>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to buy? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script>
+  import { calcIncoterms, fmtMoney } from "../../lib/calc.js";
+
+  const el = (id) => document.getElementById(id);
+  const ids = ["price", "export", "freight", "insurance"];
+
+  function num(id) {
+    const v = el(id).value.trim();
+    if (v === "") return 0;
+    const n = Number(v);
+    return Number.isFinite(n) && n >= 0 ? n : NaN;
+  }
+
+  function compute() {
+    const vals = {};
+    let ok = true;
+    for (const id of ids) {
+      vals[id] = num(id);
+      if (Number.isNaN(vals[id])) { ok = false; el(id).classList.add("invalid"); }
+      else el(id).classList.remove("invalid");
+    }
+    const err = el("error");
+    if (!ok) {
+      err.textContent = "All inputs must be non-negative numbers.";
+      el("result").innerHTML = '<p class="rate-meta">Fix the highlighted fields to see the result.</p>';
+      return;
+    }
+    err.textContent = "";
+
+    const r = calcIncoterms({
+      vehiclePrice: vals.price, exportCosts: vals.export,
+      freight: vals.freight, insurance: vals.insurance,
+    });
+
+    const line = (label, v, cls = "") =>
+      `<div class="result-line ${cls}"><span>${label}</span><span class="val">${fmtMoney(v)}</span></div>`;
+    el("result").innerHTML =
+      line("Vehicle price", r.vehiclePrice) +
+      line("China export costs", r.exportCosts) +
+      `<div class="result-total-row"><span>FOB (estimated)</span><span class="val">${fmtMoney(r.fob)}</span></div>` +
+      line("Freight", r.freight) +
+      `<div class="result-total-row"><span>CFR (estimated)</span><span class="val">${fmtMoney(r.cfr)}</span></div>` +
+      line("Insurance", r.insurance) +
+      `<div class="result-total-row"><span>CIF (estimated)</span><span class="val">${fmtMoney(r.cif)}</span></div>` +
+      '<p class="rate-meta">Estimates only — not contractual Incoterm quotes. Confirm each component with your forwarder and insurer.</p>';
+  }
+
+  for (const id of ids) el(id).addEventListener("input", compute);
+  compute();
+</script>

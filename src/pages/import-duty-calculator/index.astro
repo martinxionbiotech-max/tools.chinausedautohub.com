@@ -44,6 +44,7 @@ const breadcrumb = {
   title="Import Duty Calculator — China Used Car Export"
   description="Estimate import duty and VAT on a used vehicle by country, value, vehicle type, fuel type, engine size and age. Every rate shows its source and date."
   canonical="/import-duty-calculator/"
+  lastUpdated="2026-10-04"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -132,6 +133,27 @@ Total tax  = Import duty + VAT</div>
       <li>Age/engine/fuel-specific duty bands are not modeled — this is a flat-rate estimate.</li>
       <li>Customs valuation may differ from the declared value.</li>
     </ul>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>Duty is applied to the declared vehicle value; VAT to value + duty (per each stored tax-rule <code>basis</code>).</li>
+      <li>Vehicle type, fuel and engine size are collected for context but do not change the flat-rate calculation.</li>
+      <li>Flat baseline rates are applied; age/engine/fuel-specific bands are not modeled.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Source &amp; last updated</h2>
+    <ul>
+      <li>Tax rules: public trade summaries, last checked <strong>2026-10-04</strong> (flagged needs review).</li>
+      <li>Country data: structured market dataset.</li>
+    </ul>
+  </div>
+
+  <div class="note warn">
+    <strong>Disclaimer:</strong> Estimate ≠ final quotation. Confirm current duty and VAT with the destination customs authority before transacting.
   </div>
 
   <div class="section">

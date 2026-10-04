@@ -1,0 +1,200 @@
+---
+import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import { TOOLS_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
+import countriesData from "../../../shared/data/countries.json";
+import importrulesData from "../../../shared/data/importrules.json";
+import "../../styles/tools.css";
+
+const siteTitle = "China Used Car Export Tools";
+const pageUrl = TOOLS_SITE_URL + "/vehicle-age-calculator/";
+
+const countries = countriesData.countries;
+const rules = importrulesData.rules || [];
+const lastChecked = [...new Set(rules.map((r) => r.last_checked).filter(Boolean))].join(", ");
+
+// Pre-build: country_id -> vehicle_age rules (for the comparison list).
+const ageRulesByCountry = {};
+for (const r of rules) {
+  if (r.category !== "vehicle_age") continue;
+  (ageRulesByCountry[r.country_id] = ageRulesByCountry[r.country_id] || []).push(r);
+}
+
+const webApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Vehicle Age Calculator",
+  url: pageUrl,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description: "Calculate a vehicle's age in years and months from its manufacture date, then compare it against destination-country age limits for used car imports.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Tools", item: TOOLS_SITE_URL + "/" },
+    { "@type": "ListItem", position: 2, name: "Vehicle Age Calculator", item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout
+  siteTitle={siteTitle}
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Vehicle Age Calculator — China Used Car Export"
+  description="Calculate a vehicle's age in years and months from its manufacture month and year, then compare it against destination-country age limits for used car imports."
+  canonical="/vehicle-age-calculator/"
+  jsonLd={[webApp, breadcrumb]}
+  lastUpdated={lastChecked}
+  breadcrumbs={[
+    { name: "Tools", url: TOOLS_SITE_URL + "/" },
+    { name: "Vehicle Age Calculator", url: pageUrl },
+  ]}
+>
+  <h1>Vehicle Age Calculator</h1>
+  <p class="lede">
+    Work out a vehicle's age from its manufacture date, then see how it compares
+    against the age limits published for each destination market.
+  </p>
+
+  <div class="section">
+    <h2>Inputs</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="year">Manufacture year</label>
+        <input id="year" type="number" inputmode="numeric" min="2000" max="2030" step="1" placeholder="e.g. 2021" />
+      </div>
+      <div class="field">
+        <label for="month">Manufacture month</label>
+        <select id="month">
+          {["January","February","March","April","May","June","July","August","September","October","November","December"].map((m, i) => (
+            <option value={i + 1}>{m}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+    <p class="form-error" id="error"></p>
+  </div>
+
+  <div class="section">
+    <h2>Vehicle age</h2>
+    <div class="result-panel" id="age">
+      <p class="rate-meta">Enter the manufacture year to calculate age.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Age limits by destination</h2>
+    <div class="result-panel" id="limits">
+      <p class="rate-meta">Enter a manufacture year to compare against age limits.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Assumptions</h2>
+    <ul>
+      <li>Age is measured from the manufacture month to the current date (your browser's clock).</li>
+      <li>A numeric limit is compared only when the rule states a clear single figure; vague or ranged rules are shown as "verify".</li>
+      <li>"Marginal" means the vehicle is within one year of the limit — double-check the exact cut-off.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Limitations</h2>
+    <ul>
+      <li>Age rules are high-risk data and change; several are flagged "needs review" or lack a numeric limit.</li>
+      <li>Some countries use the year of first registration rather than manufacture date.</li>
+      <li>Always confirm the exact cut-off with the destination customs authority.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/market-compatibility/"}>Market Compatibility Check</a>
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Request a vehicle</h2>
+    <p>Ready to buy? Get a real quote on available vehicles.</p>
+    <a class="btn" href={MAIN_SITE_URL + "/"}>Request a Vehicle</a>
+  </div>
+</BaseLayout>
+
+<script type="application/json" id="countries-data" set:html={JSON.stringify(countries)}></script>
+<script type="application/json" id="age-rules" set:html={JSON.stringify(ageRulesByCountry)}></script>
+<script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL })}></script>
+<script>
+  import { calcVehicleAge, evaluateAgeLimit, parseAgeLimitYears } from "../../lib/calc.js";
+
+  const countries = JSON.parse(document.getElementById("countries-data").textContent);
+  const ageRules = JSON.parse(document.getElementById("age-rules").textContent);
+  const marketUrl = JSON.parse(document.getElementById("site-config").textContent).marketUrl;
+  const el = (id) => document.getElementById(id);
+
+  const verdict = {
+    compliant: '<span class="match-ok">✓ Compliant</span>',
+    marginal: '<span class="match-no">⚠ Marginal</span>',
+    exceeded: '<span class="match-no">✗ Exceeded</span>',
+    no_limit: '<span class="badge badge-soon">No numeric limit — verify</span>',
+  };
+
+  function compute() {
+    const yearRaw = el("year").value.trim();
+    const year = Number(yearRaw);
+    const month = Number(el("month").value);
+    const err = el("error");
+
+    if (yearRaw === "" || !Number.isInteger(year) || year < 1900 || year > 2100) {
+      err.textContent = "Enter a manufacture year between 1900 and 2100.";
+      el("age").innerHTML = '<p class="rate-meta">Enter a valid manufacture year.</p>';
+      el("limits").innerHTML = '<p class="rate-meta">Enter a manufacture year to compare against age limits.</p>';
+      return;
+    }
+    err.textContent = "";
+
+    const now = new Date();
+    const age = calcVehicleAge({
+      manufactureYear: year, manufactureMonth: month,
+      refYear: now.getFullYear(), refMonth: now.getMonth() + 1,
+    });
+
+    el("age").innerHTML =
+      `<div class="result-total-row"><span>Vehicle age</span><span class="val">${age.years} yr ${age.months} mo</span></div>` +
+      `<div class="result-line"><span>In decimal years</span><span class="val">${age.decimalYears}</span></div>` +
+      '<p class="rate-meta">Measured from manufacture month to today. Age rules may count from first registration instead.</p>';
+
+    // Compare against each country's vehicle_age rules.
+    const rows = countries.map((c) => {
+      const crules = ageRules[c.country_id] || [];
+      if (!crules.length) {
+        return `<div class="result-line"><span><a href="${marketUrl}/countries/${c.country_id}/" target="_blank" rel="noopener">${c.name}</a></span><span class="val rate-meta">Age rule data not available</span></div>`;
+      }
+      const parts = crules.map((r) => {
+        const limit = parseAgeLimitYears(r.rule_text) ?? parseAgeLimitYears(r.title);
+        let statusHtml;
+        if (limit == null) {
+          statusHtml = verdict.no_limit;
+        } else {
+          const s = evaluateAgeLimit({ vehicleAgeYears: age.decimalYears, maxYears: limit });
+          statusHtml = `<span class="rate-meta">max ${limit} years → ${age.decimalYears} yr</span> ${verdict[s]}`;
+        }
+        const flag = r.needs_review ? ' <span class="badge badge-review">needs review</span>' : "";
+        return `<div style="margin:6px 0"><strong>${r.title || "Age rule"}</strong>${flag}<br/><span class="rate-meta">${r.rule_text || ""}</span><br/>${statusHtml}<br/><span class="rate-meta">Source: ${r.source || "—"} · ${r.last_checked || "—"}</span></div>`;
+      }).join("");
+      return `<div class="result-line" style="flex-direction:column;align-items:flex-start"><a href="${marketUrl}/countries/${c.country_id}/" target="_blank" rel="noopener">${c.name}</a>${parts}</div>`;
+    }).join("");
+
+    el("limits").innerHTML = rows +
+      '<p class="rate-meta">Limits are as published; several are vague or need review. Verify the exact cut-off with official customs.</p>';
+  }
+
+  el("year").addEventListener("input", compute);
+  el("month").addEventListener("change", compute);
+  compute();
+</script>
