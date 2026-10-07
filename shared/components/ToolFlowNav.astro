@@ -1,0 +1,26 @@
+---
+// Tool-flow position indicator + prev/next chain links (PHASE 5 §6 tool chain).
+// Renders "Step n of 8 — <label>" only when a real step exists, plus prev/next
+// tool links. Auxiliary tools (no step in the 8-step flow) show a neutral note.
+interface Props {
+  step?: number;
+  stepLabel?: string;
+  prevUrl?: string;
+  prevLabel?: string;
+  nextUrl?: string;
+  nextLabel?: string;
+  auxNote?: string;
+}
+const { step, stepLabel, prevUrl, prevLabel, nextUrl, nextLabel, auxNote } = Astro.props;
+---
+<nav class="flow-nav" aria-label="Tool flow position">
+  {step && stepLabel ? (
+    <span class="flow-step"><span class="step-num">Step {step} of 8</span>{stepLabel}</span>
+  ) : (
+    <span class="flow-step flow-step-aux">{auxNote || "Utility tool"}</span>
+  )}
+  <span class="flow-links">
+    {prevUrl && <a class="flow-link" href={prevUrl}>← {prevLabel}</a>}
+    {nextUrl && <a class="flow-link" href={nextUrl}>{nextLabel} →</a>}
+  </span>
+</nav>

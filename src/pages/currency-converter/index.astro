@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import fxData from "../../../shared/data/fx.json";
@@ -66,6 +67,10 @@ const breadcrumb = {
     Convert between USD and destination-market currencies. Rates are a snapshot —
     they move constantly, so treat results as indicative.
   </p>
+
+  <ToolFlowNav
+    auxNote="Utility — usable at any step in the export flow"
+  />
 
   <div class="note info">
     Rates snapshot date: <strong>{fxSourceDate || "—"}</strong> · Source: {fxSource || "—"} ·
@@ -158,6 +163,22 @@ A → B:      amount × (rate B ÷ rate A)</div>
 
   <div class="note warn">
     <strong>Disclaimer:</strong> Estimate ≠ final quotation. Exchange rates fluctuate — confirm the current rate before transacting.
+  </div>
+
+  <div class="section">
+    <h2>Example</h2>
+    <p>Convert $10,000 to Kenyan shillings at the snapshot rate — <strong>example figures</strong>:</p>
+    <div class="formula">$10,000 × 129.5 KES/USD = 1,295,000 KES</div>
+    <p class="rate-meta">Rate from tool.chinausedautohub.com fx.json, snapshot dated 2026-10-04. Live market rates differ — confirm before transacting.</p>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+    </div>
   </div>
 
   <div class="section">

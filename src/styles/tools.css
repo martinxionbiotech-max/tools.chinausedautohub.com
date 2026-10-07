@@ -73,6 +73,15 @@ table.data-table th:first-child { min-width: 140px; }
 .cta-band p { color: #cfe0f2; }
 .cta-band .btn { background: #fff; color: var(--color-primary); margin-top: var(--space-2); }
 
+/* Tool-flow position indicator + chain nav (PHASE 5 §6) */
+.flow-nav { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; background: var(--color-accent-soft); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); margin: var(--space-3) 0 var(--space-4); font-size: 14px; }
+.flow-step { font-weight: 700; color: var(--color-primary); }
+.flow-step .step-num { display: inline-block; background: var(--color-primary); color: #fff; border-radius: var(--radius-sm); padding: 2px 8px; margin-right: 6px; font-size: 12px; }
+.flow-step-aux { color: var(--color-text-soft); font-weight: 600; }
+.flow-links { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+.flow-link { background: var(--color-bg); border: 1px solid var(--color-border); padding: 4px 10px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; }
+.flow-link:hover { border-color: var(--color-accent); }
+
 /* related */
 .related-grid { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .related-grid a { background: var(--color-bg-alt); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-md); font-size: 14px; }

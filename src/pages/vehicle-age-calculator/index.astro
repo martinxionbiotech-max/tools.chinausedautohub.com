@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import importrulesData from "../../../shared/data/importrules.json";
@@ -58,6 +59,15 @@ const breadcrumb = {
     Work out a vehicle's age from its manufacture date, then see how it compares
     against the age limits published for each destination market.
   </p>
+
+  <ToolFlowNav
+    step={3}
+    stepLabel="Eligibility"
+    prevUrl={TOOLS_SITE_URL + "/market-compatibility/"}
+    prevLabel="Market Compatibility"
+    nextUrl={TOOLS_SITE_URL + "/import-duty-calculator/"}
+    nextLabel="Import Duty"
+  />
 
   <div class="section">
     <h2>Inputs</h2>
@@ -142,9 +152,37 @@ Compliance = compare decimal years against each destination's maximum-age rule</
   </div>
 
   <div class="section">
+    <h2>Example</h2>
+    <p>A vehicle manufactured June 2021, checked today — <strong>example figures</strong>:</p>
+    <div class="formula">Age = (2026 − 2021) years + (10 − 6) months = 5 yr 4 mo (5.33 yr)
+Kenya 8-year limit → 5.33 yr is compliant
+Saudi Arabia 5-year limit → 5.33 yr is marginal (within 1 year)</div>
+    <p class="rate-meta">Age limits from market.chinausedautohub.com importrules.json (vehicle_age category, checked 2026-10-07). Some rules are vague or need review — verify the exact cut-off.</p>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+      <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      {countries.map((c) => (
+        <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
+      ))}
+    </div>
+  </div>
+
+  <div class="section">
     <h2>Related tools</h2>
     <div class="related-grid">
-      <a href={TOOLS_SITE_URL + "/market-compatibility/"}>Market Compatibility Check</a>
+      <a href={TOOLS_SITE_URL + "/market-compatibility/"}>← Market Compatibility (previous)</a>
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator (next) →</a>
       <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
     </div>
   </div>

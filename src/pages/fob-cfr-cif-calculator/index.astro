@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import "../../styles/tools.css";
 
@@ -69,6 +70,15 @@ const faq = {
     Build up the three common Incoterm values for a used vehicle export —
     FOB, CFR and CIF — from the price and your own cost assumptions.
   </p>
+
+  <ToolFlowNav
+    step={5}
+    stepLabel="Shipping (Incoterms)"
+    prevUrl={TOOLS_SITE_URL + "/shipping-cost-estimator/"}
+    prevLabel="Shipping Cost Estimator"
+    nextUrl={TOOLS_SITE_URL + "/landed-cost-calculator/"}
+    nextLabel="Landed Cost"
+  />
 
   <div class="section">
     <h2>What these terms mean</h2>
@@ -162,17 +172,26 @@ CIF = CFR + Insurance</div>
 
   <div class="section">
     <h2>Example</h2>
-    <p>A $20,000 vehicle with $500 export costs, $2,500 freight and $200 insurance:</p>
+    <p>A $20,000 vehicle with $500 export costs, $2,500 freight and $200 insurance — <strong>example figures</strong>, not a quote:</p>
     <div class="formula">FOB = 20,000 + 500 = $20,500
 CFR = 20,500 + 2,500 = $23,000
 CIF = 23,000 + 200 = $23,200</div>
   </div>
 
   <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>Related tools</h2>
     <div class="related-grid">
-      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
-      <a href={TOOLS_SITE_URL + "/shipping-cost-estimator/"}>Shipping Cost Estimator</a>
+      <a href={TOOLS_SITE_URL + "/shipping-cost-estimator/"}>← Shipping Cost Estimator (previous)</a>
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator (next) →</a>
       <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
     </div>
   </div>

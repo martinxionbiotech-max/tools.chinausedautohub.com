@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import taxrulesData from "../../../shared/data/taxrules.json";
@@ -88,6 +89,15 @@ const faq = {
     Estimate the landed cost of an electric vehicle, comparing the standard
     import duty against any EV-specific incentive rate where one exists in the data.
   </p>
+
+  <ToolFlowNav
+    step={6}
+    stepLabel="Landed Cost (EV)"
+    prevUrl={TOOLS_SITE_URL + "/landed-cost-calculator/"}
+    prevLabel="Landed Cost"
+    nextUrl={TOOLS_SITE_URL + "/profit-calculator/"}
+    nextLabel="Profit Calculator"
+  />
 
   <div class="note warn">
     EV duty incentives vary by country and change frequently — verify current
@@ -187,6 +197,15 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
   </div>
 
   <div class="section">
+    <h2>Example</h2>
+    <p>BYD Atto 3 (EV) shipped to Kenya — <strong>example figures</strong>, not a quote:</p>
+    <div class="formula">CIF = $22,000 + $2,500 + $200 = $24,700
+Standard duty 25% → duty $6,175 + VAT 16% on ($24,700 + $6,175) → total ≈ $35,815
+EV reduced duty 10% (ke-ev-duty) → duty $2,470 + VAT 16% → total ≈ $31,517</div>
+    <p class="rate-meta">Rates from market.chinausedautohub.com taxrules.json (source: market taxrules, checked 2026-10-07, EV rates needs review). EV incentives change frequently — verify current rates.</p>
+  </div>
+
+  <div class="section">
     <h2>Related vehicles</h2>
     <div class="related-grid">
       <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
@@ -201,6 +220,15 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
       {countries.map((c) => (
         <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
       ))}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>← Landed Cost (previous)</a>
+      <a href={TOOLS_SITE_URL + "/profit-calculator/"}>Profit Calculator (next) →</a>
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
     </div>
   </div>
 

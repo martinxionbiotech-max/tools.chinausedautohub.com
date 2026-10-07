@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import modelsData from "../../../shared/data/models.json";
 import brandsData from "../../../shared/data/brands.json";
@@ -51,6 +52,13 @@ const breadcrumb = {
     Compare up to four vehicles on the technical specifications that matter for
     export decisions. Missing values show "Not available" — never fabricated.
   </p>
+
+  <ToolFlowNav
+    step={1}
+    stepLabel="Vehicle"
+    nextUrl={TOOLS_SITE_URL + "/market-compatibility/"}
+    nextLabel="Market Compatibility"
+  />
 
   <div class="section">
     <h2>Inputs: select 2–4 vehicles</h2>
@@ -130,6 +138,40 @@ const breadcrumb = {
 
   <div class="note warn">
     <strong>Disclaimer:</strong> Specifications may vary by market / trim / source and are for comparison only.
+  </div>
+
+  <div class="section">
+    <h2>Example</h2>
+    <p>Comparing BYD Atto 3 (EV) and Chery Tiggo 8 (ICE) for a Kenya-bound order — <strong>example figures</strong> from data.chinausedautohub.com models.json:</p>
+    <div class="formula">BYD Atto 3    : EV · length 4455 mm · wheelbase 2720 mm · battery 60.48 kWh · range 510 km
+Chery Tiggo 8 : ICE · length 4700 mm · wheelbase 2710 mm · engine 1498 cc · seats 5</div>
+    <p class="rate-meta">Specifications are representative first-generation trims and may vary by market / trim / source — see the full data page for sources.</p>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      <a href={MARKET_SITE_URL + "/countries/kenya/"}>Kenya</a>
+      <a href={MARKET_SITE_URL + "/countries/uae/"}>United Arab Emirates</a>
+      <a href={MARKET_SITE_URL + "/countries/nigeria/"}>Nigeria</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/market-compatibility/"}>Market Compatibility Check (next) →</a>
+      <a href={TOOLS_SITE_URL + "/vehicle-age-calculator/"}>Vehicle Age Calculator</a>
+    </div>
   </div>
 
   <div class="section">

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import "../../styles/tools.css";
 
@@ -46,6 +47,15 @@ const breadcrumb = {
     Model the gross profit, margin and ROI of a single-vehicle export deal.
     Every input is editable so you can adjust assumptions on the fly.
   </p>
+
+  <ToolFlowNav
+    step={8}
+    stepLabel="Selling Price & Profit / ROI"
+    prevUrl={TOOLS_SITE_URL + "/landed-cost-calculator/"}
+    prevLabel="Landed Cost"
+    nextUrl={TOOLS_SITE_URL + "/tco-calculator/"}
+    nextLabel="TCO (post-purchase)"
+  />
 
   <div class="section">
     <h2>Inputs</h2>
@@ -140,18 +150,39 @@ ROI          = Gross profit ÷ Total cost × 100%</div>
 
   <div class="section">
     <h2>Example</h2>
-    <p>Buy a vehicle for $18,000, ship for $2,500, pay $9,000 tax, $1,000 local, sell at $35,000:</p>
-    <div class="formula">Total cost   = 18,000 + 2,500 + 9,000 + 1,000 = $30,500
-Gross profit = 35,000 − 30,500 = $4,500
-Gross margin = 4,500 ÷ 35,000 = 12.9%
-ROI          = 4,500 ÷ 30,500 = 14.8%</div>
+    <p>Chery Tiggo 8 shipped to Kenya — <strong>example figures</strong>, not a quote. Tax &amp; duty $9,000 comes from the Import Duty example (Kenya 25% duty + 16% VAT on $20,000):</p>
+    <div class="formula">Total cost   = 20,000 + 2,500 + 9,000 + 1,000 = $32,500
+Gross profit = 35,000 − 32,500 = $2,500
+Gross margin = 2,500 ÷ 35,000 = 7.1%
+ROI          = 2,500 ÷ 32,500 = 7.7%</div>
+    <p class="rate-meta">All figures are estimates — tax, fees and FX change. Selling price is your assumption, not a market guarantee.</p>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+      <a href={DATA_SITE_URL + "/models/byd-song-plus/"}>BYD Song Plus</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      <a href={MARKET_SITE_URL + "/countries/kenya/"}>Kenya</a>
+      <a href={MARKET_SITE_URL + "/countries/tanzania/"}>Tanzania</a>
+      <a href={MARKET_SITE_URL + "/countries/nigeria/"}>Nigeria</a>
+      <a href={MARKET_SITE_URL + "/countries/uae/"}>United Arab Emirates</a>
+    </div>
   </div>
 
   <div class="section">
     <h2>Related tools</h2>
     <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>← Landed Cost (previous)</a>
+      <a href={TOOLS_SITE_URL + "/tco-calculator/"}>TCO Calculator (next) →</a>
       <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
-      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
       <a href={TOOLS_SITE_URL + "/currency-converter/"}>Currency Converter</a>
     </div>
   </div>

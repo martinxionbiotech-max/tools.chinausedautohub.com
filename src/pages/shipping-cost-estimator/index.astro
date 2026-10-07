@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, COMPANIES_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import portsData from "../../../shared/data/ports.json";
 import routesData from "../../../shared/data/routes.json";
@@ -77,6 +78,15 @@ const faq = {
     own rate assumptions. We do <strong>not</strong> publish freight prices —
     they are negotiated per shipment and change constantly.
   </p>
+
+  <ToolFlowNav
+    step={5}
+    stepLabel="Shipping"
+    prevUrl={TOOLS_SITE_URL + "/import-duty-calculator/"}
+    prevLabel="Import Duty"
+    nextUrl={TOOLS_SITE_URL + "/fob-cfr-cif-calculator/"}
+    nextLabel="FOB / CFR / CIF"
+  />
 
   <div class="note info">
     Freight rates are <strong>not listed</strong> on this site. They are negotiated
@@ -197,6 +207,23 @@ Total freight     = RoRo freight + Container freight</div>
   </div>
 
   <div class="section">
+    <h2>Example</h2>
+    <p>Shanghai → Mombasa, RoRo — <strong>example figures</strong>, not a quote:</p>
+    <div class="formula">Transit: 20–32 days (route cn-shanghai-to-ke-mombasa, low confidence)
+Freight: 3 cars × your rate $1,400/car = $4,200 (your own assumption)</div>
+    <p class="rate-meta">Transit from market.chinausedautohub.com routes.json (industry estimates, checked 2026-10-07). Freight is never published — enter your own negotiated rates.</p>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>Get a real quote</h2>
     <p>
       Request quotes from logistics and freight-forwarding providers listed on the
@@ -211,8 +238,9 @@ Total freight     = RoRo freight + Container freight</div>
   <div class="section">
     <h2>Related tools</h2>
     <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>← Import Duty (previous)</a>
+      <a href={TOOLS_SITE_URL + "/fob-cfr-cif-calculator/"}>FOB / CFR / CIF (next) →</a>
       <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
-      <a href={TOOLS_SITE_URL + "/fob-cfr-cif-calculator/"}>FOB / CFR / CIF Calculator</a>
       <a href={TOOLS_SITE_URL + "/currency-converter/"}>Currency Converter</a>
     </div>
   </div>

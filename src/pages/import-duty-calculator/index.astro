@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import taxrulesData from "../../../shared/data/taxrules.json";
@@ -56,6 +57,15 @@ const breadcrumb = {
     Estimate import duty and VAT on a vehicle using baseline duty and VAT rates
     for the destination country.
   </p>
+
+  <ToolFlowNav
+    step={4}
+    stepLabel="Duty"
+    prevUrl={TOOLS_SITE_URL + "/vehicle-age-calculator/"}
+    prevLabel="Vehicle Age"
+    nextUrl={TOOLS_SITE_URL + "/shipping-cost-estimator/"}
+    nextLabel="Shipping Cost Estimator"
+  />
 
   <div class="section">
     <h2>Inputs</h2>
@@ -174,10 +184,20 @@ Total tax  = Import duty + VAT</div>
 
   <div class="section">
     <h2>Example</h2>
-    <p>A $20,000 SUV imported to Kenya (duty 25%, VAT 16%):</p>
-    <div class="formula">Duty 25% of $20,000 = $5,000
+    <p>Chery Tiggo 8 (ICE SUV) imported to Kenya — <strong>example figures</strong>, not a quote:</p>
+    <div class="formula">Duty 25% of $20,000 = $5,000 (ke-duty)
 VAT 16% of ($20,000 + $5,000) = $4,000
 Total tax = $9,000</div>
+    <p class="rate-meta">Rates are baselines from market.chinausedautohub.com taxrules.json (source: market taxrules, checked 2026-10-07, needs review). Age/engine bands are not modeled — treat as an estimate.</p>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+      <a href={DATA_SITE_URL + "/models/byd-song-plus/"}>BYD Song Plus</a>
+    </div>
   </div>
 
   <div class="section">
@@ -186,6 +206,16 @@ Total tax = $9,000</div>
       {countries.map((c) => (
         <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
       ))}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/vehicle-age-calculator/"}>← Vehicle Age (previous)</a>
+      <a href={TOOLS_SITE_URL + "/shipping-cost-estimator/"}>Shipping Cost Estimator (next) →</a>
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
+      <a href={TOOLS_SITE_URL + "/ev-import-cost-calculator/"}>EV Import Cost Calculator</a>
     </div>
   </div>
 

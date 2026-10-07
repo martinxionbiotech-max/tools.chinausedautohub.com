@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, DATA_SITE_URL, MARKET_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import "../../styles/tools.css";
 
@@ -46,6 +47,10 @@ const breadcrumb = {
     Estimate the five-year total cost of ownership of a used vehicle. Every
     input is a pre-filled example assumption — adjust each to your case.
   </p>
+
+  <ToolFlowNav
+    auxNote="Post-purchase — after the 8-step export flow"
+  />
 
   <div class="note info">
     Fuel/charging prices and local running costs are <strong>not</strong> published
@@ -157,11 +162,38 @@ Annual average      = TCO ÷ N</div>
   </div>
 
   <div class="section">
+    <h2>Example</h2>
+    <p>Chery Tiggo 8 (ICE), 5-year hold — <strong>example figures</strong>, not a quote:</p>
+    <div class="formula">Acquisition = 20,000 + 2,500 + 9,000 = $31,500
+Annual running = 800 + 500 + 700 = $2,000/yr
+5-year TCO = 31,500 + (2,000 × 5) = $41,500 · average $8,300/yr</div>
+    <p class="rate-meta">All running-cost figures are example assumptions — no fuel, electricity or insurance prices are published here. Adjust to your researched figures.</p>
+  </div>
+
+  <div class="section">
+    <h2>Related vehicles</h2>
+    <div class="related-grid">
+      <a href={DATA_SITE_URL + "/models/chery-tiggo-8/"}>Chery Tiggo 8</a>
+      <a href={DATA_SITE_URL + "/models/geely-monjaro/"}>Geely Monjaro</a>
+      <a href={DATA_SITE_URL + "/models/byd-atto-3/"}>BYD Atto 3</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related countries</h2>
+    <div class="related-grid">
+      <a href={MARKET_SITE_URL + "/countries/kenya/"}>Kenya</a>
+      <a href={MARKET_SITE_URL + "/countries/nigeria/"}>Nigeria</a>
+      <a href={MARKET_SITE_URL + "/countries/uae/"}>United Arab Emirates</a>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>Related tools</h2>
     <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/profit-calculator/"}>← Profit Calculator (previous)</a>
       <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
       <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
-      <a href={TOOLS_SITE_URL + "/profit-calculator/"}>Profit Calculator</a>
     </div>
   </div>
 

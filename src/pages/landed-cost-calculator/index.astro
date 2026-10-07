@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import taxrulesData from "../../../shared/data/taxrules.json";
@@ -61,6 +62,15 @@ const breadcrumb = {
     Estimate what a vehicle really costs when it lands in the destination
     country — vehicle, shipping, insurance, duty, VAT, and local charges.
   </p>
+
+  <ToolFlowNav
+    step={6}
+    stepLabel="Landed Cost"
+    prevUrl={TOOLS_SITE_URL + "/fob-cfr-cif-calculator/"}
+    prevLabel="FOB / CFR / CIF"
+    nextUrl={TOOLS_SITE_URL + "/profit-calculator/"}
+    nextLabel="Profit Calculator"
+  />
 
   <div class="section">
     <h2>Inputs</h2>
@@ -183,13 +193,13 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT + Port charges + Other
 
   <div class="section">
     <h2>Example</h2>
-    <p>BYD Song Plus (PHEV) shipped to Kenya, assuming Kenya duty 25% and VAT 16%:</p>
-    <div class="formula">Vehicle $20,000 + Shipping $2,500 + Insurance $200 → CIF = $22,700
-Duty 25% of $22,700 = $5,675
-VAT 16% of ($22,700 + $5,675) = $4,540
+    <p>BYD Atto 3 (EV) shipped to Kenya, using the Kenya EV reduced duty 10% and VAT 16% — <strong>example figures</strong>, not a quote:</p>
+    <div class="formula">Vehicle $22,000 + Shipping $2,500 + Insurance $200 → CIF = $24,700
+Duty 10% of $24,700 = $2,470 (EV reduced rate, ke-ev-duty)
+VAT 16% of ($24,700 + $2,470) = $4,347
 + Port $400 + Local fees $600
-Estimated landed cost = $33,915</div>
-    <p class="rate-meta">Rates are baselines from market.chinausedautohub.com taxrules.json (checked 2026-10-07, needs review). Actual duty depends on age, engine and customs valuation.</p>
+Estimated landed cost ≈ $32,517</div>
+    <p class="rate-meta">Rates are baselines from market.chinausedautohub.com taxrules.json (source: market taxrules, checked 2026-10-07, needs review). Figures are estimates — actual duty depends on age, engine and customs valuation.</p>
   </div>
 
   <div class="section">
@@ -208,6 +218,17 @@ Estimated landed cost = $33,915</div>
       {countries.map((c) => (
         <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
       ))}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/fob-cfr-cif-calculator/"}>← FOB / CFR / CIF (previous)</a>
+      <a href={TOOLS_SITE_URL + "/profit-calculator/"}>Profit Calculator (next) →</a>
+      <a href={TOOLS_SITE_URL + "/shipping-cost-estimator/"}>Shipping Cost Estimator</a>
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
+      <a href={TOOLS_SITE_URL + "/ev-import-cost-calculator/"}>EV Import Cost Calculator</a>
     </div>
   </div>
 

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../shared/components/BaseLayout.astro";
+import ToolFlowNav from "../../../shared/components/ToolFlowNav.astro";
 import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import taxrulesData from "../../../shared/data/taxrules.json";
@@ -71,6 +72,15 @@ const breadcrumb = {
     See whether a vehicle fits a destination market — drive side, import
     eligibility, estimated taxes and known issues. Assumptions are stated, not hidden.
   </p>
+
+  <ToolFlowNav
+    step={2}
+    stepLabel="Destination Country"
+    prevUrl={TOOLS_SITE_URL + "/vehicle-comparison/"}
+    prevLabel="Vehicle Comparison"
+    nextUrl={TOOLS_SITE_URL + "/vehicle-age-calculator/"}
+    nextLabel="Vehicle Age"
+  />
 
   <div class="section">
     <h2>Inputs</h2>
@@ -158,6 +168,16 @@ const breadcrumb = {
   </div>
 
   <div class="section">
+    <h2>Example</h2>
+    <p>BYD Atto 3 (EV) → Kenya — <strong>example figures</strong>, not a quote:</p>
+    <div class="formula">Drive side        : Kenya is RHD — Atto 3 has RHD production available (source an RHD unit)
+Import eligibility: 8-year age limit (KS 1515) — compliant if ≤8 years old
+Estimated taxes   : EV reduced duty 10% (ke-ev-duty) + VAT 16%
+Known issues      : China GB/T charging standard — confirm destination connector</div>
+    <p class="rate-meta">Rules and rates from market.chinausedautohub.com importrules.json / taxrules.json (checked 2026-10-07, needs review). Verify with the destination customs authority.</p>
+  </div>
+
+  <div class="section">
     <h2>Related vehicles</h2>
     <div class="related-grid">
       <a href={DATA_SITE_URL + "/models/byd-song-plus/"}>BYD Song Plus</a>
@@ -173,6 +193,16 @@ const breadcrumb = {
       {countries.map((c) => (
         <a href={MARKET_SITE_URL + "/countries/" + c.country_id + "/"}>{c.name}</a>
       ))}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Related tools</h2>
+    <div class="related-grid">
+      <a href={TOOLS_SITE_URL + "/vehicle-comparison/"}>← Vehicle Comparison (previous)</a>
+      <a href={TOOLS_SITE_URL + "/vehicle-age-calculator/"}>Vehicle Age Calculator (next) →</a>
+      <a href={TOOLS_SITE_URL + "/import-duty-calculator/"}>Import Duty Calculator</a>
+      <a href={TOOLS_SITE_URL + "/landed-cost-calculator/"}>Landed Cost Calculator</a>
     </div>
   </div>
 
