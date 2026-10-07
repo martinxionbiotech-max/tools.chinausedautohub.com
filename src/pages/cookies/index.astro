@@ -1,0 +1,44 @@
+---
+import LegalPage from "../../../shared/components/LegalPage.astro";
+import { TOOLS_SITE_URL } from "../../../shared/config/config";
+
+const sections = [
+  {
+    h: "Cookies we use",
+    p: [
+      "This site is a static set of calculators and does not use advertising or analytics cookies. We do not set tracking cookies, advertising cookies or cross-site tracking identifiers. Calculator inputs are processed in your browser and are not stored.",
+    ],
+  },
+  {
+    h: "No tracking — no consent required",
+    p: [
+      "Because this site sets no non-essential cookies and runs no third-party tracking scripts, it does not require a cookie-consent banner under data-protection rules that apply to non-essential cookies.",
+    ],
+  },
+  {
+    h: "Managing cookies",
+    p: [
+      "You can control or delete cookies through your browser settings. This site does not depend on cookies for basic browsing, so disabling them should not affect your ability to use it.",
+    ],
+  },
+  {
+    h: "Contact",
+    p: [
+      "For questions about this cookie policy, email {email}.",
+    ],
+  },
+];
+---
+
+<LegalPage
+  siteTitle="China Used Car Export Tools"
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Cookie Policy — China Used Car Export Tools"
+  description="Cookie policy for the Tools sub-site: static calculators with no tracking cookies, no analytics and no consent banner required."
+  canonical="/cookies/"
+  h1="Cookie Policy"
+  intro="This page describes the cookies used on this website."
+  sections={sections}
+  lastUpdated="2026-10-07"
+/>

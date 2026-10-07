@@ -1,0 +1,50 @@
+---
+import LegalPage from "../../../shared/components/LegalPage.astro";
+import { TOOLS_SITE_URL, MARKET_SITE_URL } from "../../../shared/config/config";
+
+const sections = [
+  {
+    h: "Estimate vs official quote vs actual customs assessment",
+    p: [
+      "Each calculator output is one of three kinds of figure, and they must not be confused. An estimate is the figure a tool calculates from the inputs you enter, for planning only. An official quote is a binding figure confirmed separately with a supplier, freight forwarder, customs broker or other counterparty. An actual customs assessment is the destination customs authority's final determination of value, duty and tax, which governs what you ultimately pay.",
+    ],
+  },
+  {
+    h: "Estimates are not final figures",
+    p: [
+      "No calculator output is a quotation, offer or guarantee. Vehicle price, shipping, insurance, port charges and local fees are the values you enter. Import duty and VAT baselines are drawn from the market sub-site tax rules and are flagged for review; exchange rates are snapshots that fluctuate daily.",
+    ],
+  },
+  {
+    h: "Not financial or legal advice",
+    p: [
+      "These tools do not provide financial, tax, legal, customs or import advice. For decisions with legal or financial consequences, consult a qualified adviser in your jurisdiction and the relevant destination-country authorities.",
+    ],
+  },
+  {
+    h: "Verify before relying",
+    p: [
+      "Before relying on any estimate, confirm current duty, VAT, exchange rates and regulations with the destination customs authority. Figures change and may differ from what a tool shows.",
+    ],
+  },
+  {
+    h: "Contact",
+    p: [
+      "If you believe information here is incorrect or out of date, email {email} or message us on WhatsApp: {whatsapp}.",
+    ],
+  },
+];
+---
+
+<LegalPage
+  siteTitle="China Used Car Export Tools"
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Disclaimer — China Used Car Export Tools"
+  description="Calculator disclaimer: estimate vs official quote vs actual customs assessment, no financial or legal advice, and verify with authorities."
+  canonical="/disclaimer/"
+  h1="Disclaimer"
+  intro="The calculators on this website produce estimates for planning only."
+  sections={sections}
+  lastUpdated="2026-10-07"
+/>

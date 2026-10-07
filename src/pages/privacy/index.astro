@@ -1,0 +1,50 @@
+---
+import LegalPage from "../../../shared/components/LegalPage.astro";
+import { TOOLS_SITE_URL } from "../../../shared/config/config";
+
+const sections = [
+  {
+    h: "Information we collect",
+    p: [
+      "The Tools sub-site hosts calculators that run entirely in your browser. It does not run contact forms or request forms, and it does not send your inputs to a server or collect personal information through the site itself. If you contact us by email or WhatsApp, we receive only the details you choose to send.",
+    ],
+  },
+  {
+    h: "How we use your information",
+    p: [
+      "We use information you send us solely to respond to your enquiry and to provide the sourcing and export services you request. We do not sell your information or share it with third parties for marketing.",
+    ],
+  },
+  {
+    h: "Storage",
+    p: [
+      "Calculator inputs are processed in your browser and are not stored by us. Enquiries are kept only as long as needed to respond to you. This site is static and does not run advertising or analytics trackers.",
+    ],
+  },
+  {
+    h: "Your rights",
+    p: [
+      "You may ask us to access, correct or delete the personal data you have provided. We do not currently appoint a representative in any specific jurisdiction; our data practices are described here as they actually operate.",
+    ],
+  },
+  {
+    h: "Contact",
+    p: [
+      "For privacy questions, email {email} or message us on WhatsApp: {whatsapp}.",
+    ],
+  },
+];
+---
+
+<LegalPage
+  siteTitle="China Used Car Export Tools"
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Privacy Policy — China Used Car Export Tools"
+  description="How the Tools sub-site handles information: calculators run in your browser, inputs are not stored, and no advertising or analytics trackers are used."
+  canonical="/privacy/"
+  h1="Privacy Policy"
+  intro="This policy explains how the Tools sub-site (part of China Used Auto Hub) handles information. Calculator inputs stay in your browser; nothing is sent to us or stored."
+  sections={sections}
+  lastUpdated="2026-10-07"
+/>

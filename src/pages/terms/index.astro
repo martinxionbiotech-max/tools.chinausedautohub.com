@@ -1,0 +1,50 @@
+---
+import LegalPage from "../../../shared/components/LegalPage.astro";
+import { TOOLS_SITE_URL } from "../../../shared/config/config";
+
+const sections = [
+  {
+    h: "Service description",
+    p: [
+      "The Tools sub-site provides free decision-support calculators for used car export — landed cost, import duty, profit, vehicle comparison, market compatibility, currency conversion, shipping, Incoterms, vehicle age, EV import and total cost of ownership. The calculators are for planning only.",
+    ],
+  },
+  {
+    h: "Estimates, not quotes",
+    p: [
+      "Every figure a calculator produces is an estimate, not a quotation, offer or guarantee. Inputs such as vehicle price, shipping, insurance and local fees are the values you enter. Tax rates and exchange rates are baselines that may be out of date or require confirmation.",
+    ],
+  },
+  {
+    h: "No financial or legal advice",
+    p: [
+      "These tools do not provide financial, tax, legal, customs or import advice. For decisions with legal or financial consequences, consult a qualified adviser and the relevant destination-country authorities.",
+    ],
+  },
+  {
+    h: "Governing law",
+    p: [
+      "Unless mandatory law in your jurisdiction provides otherwise, these terms and your use of this website are governed by the laws of the People's Republic of China.",
+    ],
+  },
+  {
+    h: "Contact",
+    p: [
+      "For questions about these terms, email {email}.",
+    ],
+  },
+];
+---
+
+<LegalPage
+  siteTitle="China Used Car Export Tools"
+  siteUrl={TOOLS_SITE_URL}
+  currentSection="tools"
+  title="Terms of Use — China Used Car Export Tools"
+  description="Terms of use for the Tools sub-site: free estimation calculators that are for planning only, not quotes or professional advice."
+  canonical="/terms/"
+  h1="Terms of Use"
+  intro="By using this website you agree to these terms. The Tools sub-site provides estimation calculators as part of China Used Auto Hub."
+  sections={sections}
+  lastUpdated="2026-10-07"
+/>
