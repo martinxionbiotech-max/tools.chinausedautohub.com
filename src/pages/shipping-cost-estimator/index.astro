@@ -12,7 +12,6 @@ const ports = portsData.ports;
 const routes = routesData.routes;
 const originPorts = ports.filter((p) => p.type === "origin");
 const destPorts = ports.filter((p) => p.type === "destination");
-const routesLastChecked = [...new Set(routes.map((r) => r.last_checked).filter(Boolean))].join(", ");
 
 const webApp = {
   "@context": "https://schema.org",
@@ -66,7 +65,7 @@ const faq = {
   description="Estimate transit days between a Chinese origin port and a destination port for RoRo and container shipping, plus a freight total built from your own rate assumptions. We never publish unverified freight prices."
   canonical="/shipping-cost-estimator/"
   jsonLd={[webApp, breadcrumb, faq]}
-  lastUpdated={routesLastChecked}
+  lastUpdated="2026-10-07"
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
     { name: "Shipping Cost Estimator", url: pageUrl },
@@ -173,10 +172,10 @@ Total freight     = RoRo freight + Container freight</div>
   </div>
 
   <div class="section">
-  <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Transit estimates: structured route dataset (industry estimates, low/medium confidence).</li>
+      <li>Transit estimates: <strong>market.chinausedautohub.com</strong> routes.json ({routes.length} routes, industry estimates, low/medium confidence), last checked <strong>2026-10-07</strong>.</li>
+      <li>Ports: market.chinausedautohub.com ports.json.</li>
       <li>Freight: no published rates — user-entered figures only.</li>
     </ul>
   </div>
@@ -184,10 +183,11 @@ Total freight     = RoRo freight + Container freight</div>
   <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Route data last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 
+  <div class="section">
     <h2>Limitations</h2>
     <ul>
       <li>Route data is flagged low/medium confidence and covers a subset of China ports and destination ports.</li>

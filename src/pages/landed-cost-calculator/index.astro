@@ -3,6 +3,8 @@ import BaseLayout from "../../../shared/components/BaseLayout.astro";
 import { TOOLS_SITE_URL, MARKET_SITE_URL, DATA_SITE_URL, MAIN_SITE_URL } from "../../../shared/config/config";
 import countriesData from "../../../shared/data/countries.json";
 import taxrulesData from "../../../shared/data/taxrules.json";
+import modelsData from "../../../shared/data/models.json";
+import brandsData from "../../../shared/data/brands.json";
 import "../../styles/tools.css";
 
 const siteTitle = "China Used Car Export Tools";
@@ -10,6 +12,8 @@ const pageUrl = TOOLS_SITE_URL + "/landed-cost-calculator/";
 
 const countries = countriesData.countries;
 const taxrules = taxrulesData.taxrules;
+const models = modelsData.models;
+const brandName = Object.fromEntries(brandsData.brands.map((b) => [b.brand_id, b.name]));
 
 // Pre-build lookup: country_id -> { import_duty: rule, vat: rule }
 const taxByCountry = {};
@@ -24,7 +28,7 @@ const webApp = {
   url: pageUrl,
   applicationCategory: "FinanceApplication",
   operatingSystem: "Web",
-  description: "Estimate the total landed cost of a used vehicle — vehicle price, shipping, insurance, import duty, VAT, port charges and local fees — for seven destination markets.",
+  description: "Estimate the total landed cost of a used vehicle — vehicle price, shipping, insurance, import duty, VAT, port charges and local fees — for 82 destination markets.",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 };
 
@@ -45,7 +49,7 @@ const breadcrumb = {
   title="Landed Cost Calculator — China Used Car Export"
   description="Estimate the total landed cost of importing a used vehicle: vehicle price, shipping, insurance, import duty, VAT, port charges and local fees. Transparent formulas with source and date for every rate."
   canonical="/landed-cost-calculator/"
-  lastUpdated="2026-10-04"
+  lastUpdated="2026-10-07"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -61,6 +65,14 @@ const breadcrumb = {
   <div class="section">
     <h2>Inputs</h2>
     <div class="form-grid">
+      <div class="field">
+        <label for="model">Vehicle model (optional)</label>
+        <select id="model">
+          <option value="">— Select a vehicle —</option>
+          {models.map((m) => <option value={m.model_id}>{brandName[m.brand_id]} {m.name} ({m.body_type})</option>)}
+        </select>
+        <span class="hint">Specs from data.chinausedautohub.com. Base price is not in the vehicle database — see current listings on the main site.</span>
+      </div>
       <div class="field">
         <label for="vehicle">Vehicle price (USD)</label>
         <input id="vehicle" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 20000" />
@@ -99,6 +111,7 @@ const breadcrumb = {
     <div id="rate-box" class="rate-card">
       <p class="rate-meta">Select a destination country to load duty and VAT rates.</p>
     </div>
+    <p class="rate-meta" id="model-note"></p>
     <p class="rate-meta" id="fx-note"></p>
   </div>
 
@@ -132,7 +145,7 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT + Port charges + Other
     <h2>Limitations</h2>
     <ul>
       <li>Exchange rates are a snapshot — they fluctuate daily.</li>
-      <li>Tax rates come from public trade summaries and are flagged <strong>needs review</strong>; confirm with the destination customs authority.</li>
+      <li>Tax rates come from <strong>market.chinausedautohub.com</strong> taxrules.json and are flagged <strong>needs review</strong>; confirm with the destination customs authority.</li>
       <li>Excludes destination-port incidental fees not entered, inland transport, and any age/engine-specific duty bands not modeled.</li>
       <li>Shipping is user-entered; we never publish unverified freight quotes.</li>
     </ul>
@@ -150,16 +163,17 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT + Port charges + Other
   <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Tax rules: public trade summaries, last checked <strong>2026-10-04</strong> (flagged needs review).</li>
-      <li>Exchange rates: snapshot dated <strong>2026-10-04</strong>.</li>
-      <li>Country data: structured market dataset.</li>
+      <li>Import duty &amp; VAT rates: <strong>market.chinausedautohub.com</strong> taxrules.json, checked <strong>2026-10-07</strong> (many flagged needs review).</li>
+      <li>Vehicle specifications: <strong>data.chinausedautohub.com</strong> models.json, checked <strong>2026-10-07</strong>.</li>
+      <li>Exchange rates: <strong>tool.chinausedautohub.com</strong> fx.json snapshot, dated <strong>2026-10-04</strong>.</li>
+      <li>Country data: market.chinausedautohub.com countries.json.</li>
     </ul>
   </div>
 
     <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 
@@ -175,7 +189,7 @@ Duty 25% of $22,700 = $5,675
 VAT 16% of ($22,700 + $5,675) = $4,540
 + Port $400 + Local fees $600
 Estimated landed cost = $33,915</div>
-    <p class="rate-meta">Rates are baselines from public trade summaries (2026-10-04, needs review). Actual duty depends on age, engine and customs valuation.</p>
+    <p class="rate-meta">Rates are baselines from market.chinausedautohub.com taxrules.json (checked 2026-10-07, needs review). Actual duty depends on age, engine and customs valuation.</p>
   </div>
 
   <div class="section">
@@ -215,15 +229,30 @@ Estimated landed cost = $33,915</div>
 </BaseLayout>
 
 <script type="application/json" id="tax-by-country" set:html={JSON.stringify(taxByCountry)}></script>
-<script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL })}></script>
+<script type="application/json" id="models-data" set:html={JSON.stringify(models)}></script>
+<script type="application/json" id="brand-name" set:html={JSON.stringify(brandName)}></script>
+<script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL, dataUrl: DATA_SITE_URL, mainUrl: MAIN_SITE_URL })}></script>
 <script>
   import { calcLandedCost, fmtMoney, fmtEstimate } from "../../lib/calc.js";
 
   const taxByCountry = JSON.parse(document.getElementById("tax-by-country").textContent);
-  const marketUrl = JSON.parse(document.getElementById("site-config").textContent).marketUrl;
+  const models = JSON.parse(document.getElementById("models-data").textContent);
+  const brandName = JSON.parse(document.getElementById("brand-name").textContent);
+  const { marketUrl, dataUrl, mainUrl } = JSON.parse(document.getElementById("site-config").textContent);
 
   const el = (id) => document.getElementById(id);
   const ids = ["vehicle", "shipping", "insurance", "port", "local"];
+
+  function renderModelNote() {
+    const mid = el("model").value;
+    const note = el("model-note");
+    if (!mid) { note.textContent = ""; return; }
+    const m = models.find((x) => x.model_id === mid);
+    const label = m ? `${brandName[m.brand_id]} ${m.name}` : mid;
+    note.innerHTML =
+      `${label}: specifications on <a href="${dataUrl}/models/${mid}/" target="_blank" rel="noopener">Vehicle Data →</a> · ` +
+      `current price on <a href="${mainUrl}/cars/" target="_blank" rel="noopener">Inventory →</a> (base price is not published in the vehicle database).`;
+  }
 
   function num(id) {
     const v = el(id).value.trim();
@@ -263,6 +292,7 @@ Estimated landed cost = $33,915</div>
   function compute() {
     const countryId = el("country").value;
     renderRates(countryId);
+    renderModelNote();
 
     const vals = {};
     let ok = true;
@@ -312,5 +342,6 @@ Estimated landed cost = $33,915</div>
 
   for (const id of ids) el(id).addEventListener("input", compute);
   el("country").addEventListener("change", compute);
+  el("model").addEventListener("change", compute);
   compute();
 </script>

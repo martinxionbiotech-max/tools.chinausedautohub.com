@@ -10,7 +10,6 @@ const pageUrl = TOOLS_SITE_URL + "/ev-import-cost-calculator/";
 
 const countries = countriesData.countries;
 const taxrules = taxrulesData.taxrules;
-const lastChecked = [...new Set(taxrules.map((r) => r.last_checked).filter(Boolean))].join(", ");
 
 // Pre-build: country_id -> { import_duty rules[], vat rule }.
 // A country may hold a standard duty AND a reduced/exempt EV duty entry.
@@ -33,7 +32,7 @@ const webApp = {
   url: pageUrl,
   applicationCategory: "FinanceApplication",
   operatingSystem: "Web",
-  description: "Estimate the landed cost of an electric vehicle — vehicle price, shipping, insurance, import duty (standard and any EV-specific incentive) and VAT — for seven destination markets.",
+  description: "Estimate the landed cost of an electric vehicle — vehicle price, shipping, insurance, import duty (standard and any EV-specific incentive) and VAT — for 82 destination markets.",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 };
 
@@ -75,10 +74,10 @@ const faq = {
   siteUrl={TOOLS_SITE_URL}
   currentSection="tools"
   title="EV Import Cost Calculator — China Used Car Export"
-  description="Estimate the landed cost of an electric vehicle — price, shipping, insurance, import duty (standard and EV incentive) and VAT — for seven destination markets, with sources and dates."
+  description="Estimate the landed cost of an electric vehicle — price, shipping, insurance, import duty (standard and EV incentive) and VAT — for 82 destination markets, with sources and dates."
   canonical="/ev-import-cost-calculator/"
   jsonLd={[webApp, breadcrumb, faq]}
-  lastUpdated={lastChecked}
+  lastUpdated="2026-10-07"
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
     { name: "EV Import Cost Calculator", url: pageUrl },
@@ -163,22 +162,22 @@ Landed cost = Vehicle + Shipping + Insurance + Duty + VAT</div>
   </div>
 
   <div class="section">
-  <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Tax rules: public trade summaries (flagged needs review).</li>
-      <li>Exchange rates: structured FX dataset snapshot.</li>
-      <li>Country data: structured market dataset.</li>
+      <li>Import duty (standard + EV incentive) &amp; VAT: <strong>market.chinausedautohub.com</strong> taxrules.json, checked <strong>2026-10-07</strong> (EV rates flagged needs review).</li>
+      <li>Country data: market.chinausedautohub.com countries.json.</li>
+      <li>All figures are in USD — no exchange-rate conversion is applied here.</li>
     </ul>
   </div>
 
   <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Tax rules and exchange rates last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 
+  <div class="section">
     <h2>Limitations</h2>
     <ul>
       <li>EV duty incentives are policy measures that change frequently and are flagged "needs review".</li>

@@ -39,7 +39,7 @@ const breadcrumb = {
   title="Vehicle Comparison — China Used Car Export"
   description="Compare Chinese-market vehicles side by side: body, powertrain, dimensions, wheelbase, battery, range and seats. Full specs link to the data site; prices link to the main site."
   canonical="/vehicle-comparison/"
-  lastUpdated="2026-10-04"
+  lastUpdated="2026-10-07"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -54,6 +54,7 @@ const breadcrumb = {
 
   <div class="section">
     <h2>Inputs: select 2–4 vehicles</h2>
+    <p class="rate-meta">All {models.length} vehicles from data.chinausedautohub.com models.json.</p>
     <ul class="checklist" id="picker">
       {models.map((m) => (
         <li>
@@ -114,8 +115,8 @@ const breadcrumb = {
   <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Vehicle specifications come from the structured data site, source-tracked per value.</li>
-      <li>Specification data last updated <strong>2026-10-04</strong>.</li>
+      <li>Vehicle specifications: <strong>data.chinausedautohub.com</strong> models.json ({models.length} models), source-tracked per value, checked <strong>2026-10-07</strong>.</li>
+      <li>Brand names: data.chinausedautohub.com brands.json.</li>
       <li>Prices are not listed here — they live on the main site.</li>
     </ul>
   </div>
@@ -123,7 +124,7 @@ const breadcrumb = {
     <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 

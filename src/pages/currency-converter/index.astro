@@ -14,9 +14,16 @@ const fxSourceDate = fx.source_date;
 const fxConfidence = fx.confidence;
 const fxSource = fx.source;
 
+// Currency list is derived from the published FX snapshot (fx.json), not the full
+// country list — a currency with no published rate cannot be converted. fx.json is
+// TOOLS-owned and currently carries 7 destination-market rates (no fabricated rates).
+const countryByCurrency = {};
+for (const c of countries) {
+  if (c.currency && !countryByCurrency[c.currency]) countryByCurrency[c.currency] = c.name;
+}
 const currencies = [
   { code: "USD", name: "US Dollar" },
-  ...countries.map((c) => ({ code: c.currency, name: c.name })),
+  ...Object.keys(fx.rates).map((code) => ({ code, name: countryByCurrency[code] || code })),
 ];
 
 const webApp = {
@@ -26,7 +33,7 @@ const webApp = {
   url: pageUrl,
   applicationCategory: "FinanceApplication",
   operatingSystem: "Web",
-  description: "Convert between USD and the seven destination-market currencies at the latest snapshot rates.",
+  description: "Convert between USD and destination-market currencies at the latest snapshot rates (7 published rates).",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 };
 
@@ -45,9 +52,9 @@ const breadcrumb = {
   siteUrl={TOOLS_SITE_URL}
   currentSection="tools"
   title="Currency Converter — China Used Car Export"
-  description="Convert between USD and the seven destination-market currencies at the latest snapshot rates. Rates are dated and flagged as fluctuating."
+  description="Convert between USD and destination-market currencies at the latest snapshot rates. Rates are dated and flagged as fluctuating."
   canonical="/currency-converter/"
-  lastUpdated={fxSourceDate}
+  lastUpdated="2026-10-07"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -136,15 +143,16 @@ A → B:      amount × (rate B ÷ rate A)</div>
   <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Rates source: {fxSource || "—"}, snapshot date <strong>{fxSourceDate || "—"}</strong>.</li>
+      <li>Rates source: <strong>tool.chinausedautohub.com</strong> fx.json — {fxSource || "—"}, snapshot date <strong>{fxSourceDate || "—"}</strong>.</li>
       <li>Confidence: {fxConfidence || "unknown"}.</li>
+      <li>Only {Object.keys(fx.rates).length} destination-market currencies have published snapshot rates; other currencies are omitted rather than estimated.</li>
     </ul>
   </div>
 
     <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 

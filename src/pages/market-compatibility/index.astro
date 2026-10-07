@@ -6,6 +6,7 @@ import taxrulesData from "../../../shared/data/taxrules.json";
 import importrulesData from "../../../shared/data/importrules.json";
 import modelsData from "../../../shared/data/models.json";
 import brandsData from "../../../shared/data/brands.json";
+import vehicleMarketData from "../../../shared/data/vehicle-market.json";
 import "../../styles/tools.css";
 
 const siteTitle = "China Used Car Export Tools";
@@ -21,6 +22,14 @@ const taxByCountry = {};
 for (const r of taxrules) {
   (taxByCountry[r.country_id] = taxByCountry[r.country_id] || {})[r.tax_type] = r;
 }
+
+// Vehicle × Market relationship layer (market.chinausedautohub.com vehicle-market.json, 228 relations).
+// Read-only reference: relation records join model_id × country_id and carry source-tracked fit facts.
+const relations = vehicleMarketData.relations || [];
+const relationByKey = Object.fromEntries(
+  relations.map((r) => [`${r.vehicle_id}|${r.country_id}`, r])
+);
+const relationsLastChecked = [...new Set(relations.map((r) => r.checked_date).filter(Boolean))].sort().pop() || "—";
 
 const webApp = {
   "@context": "https://schema.org",
@@ -50,7 +59,7 @@ const breadcrumb = {
   title="Market Compatibility Check — China Used Car Export"
   description="Check whether a vehicle fits a destination market: drive side match, import eligibility, estimated taxes and known issues. Assumptions are stated explicitly."
   canonical="/market-compatibility/"
-  lastUpdated="2026-10-04"
+  lastUpdated="2026-10-07"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -105,6 +114,7 @@ const breadcrumb = {
       <li><strong>Drive side</strong> — compares the destination's <code>drive_side</code> against the assumption that China-market vehicles are left-hand drive (LHD).</li>
       <li><strong>Import eligibility</strong> — age and other rules from the market data; empty until rules are published.</li>
       <li><strong>Estimated taxes</strong> — baseline duty and VAT rates from the tax-rule data.</li>
+      <li><strong>Curated market fit</strong> — where a Vehicle × Market relation exists in vehicle-market.json, its source-tracked drive-side, powertrain, EV-charging, eligibility and model considerations are shown.</li>
     </ul>
   </div>
 
@@ -129,7 +139,9 @@ const breadcrumb = {
   <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Import rules and tax rules: market dataset, last checked <strong>2026-10-04</strong>.</li>
+      <li>Import rules and tax rules: <strong>market.chinausedautohub.com</strong> importrules.json / taxrules.json, last checked <strong>2026-10-07</strong>.</li>
+      <li>Vehicle specifications: <strong>data.chinausedautohub.com</strong> models.json, checked <strong>2026-10-07</strong>.</li>
+      <li>Vehicle × market fit: market.chinausedautohub.com vehicle-market.json ({relations.length} relations, checked {relationsLastChecked}).</li>
       <li>Many rules are flagged needs review — confirm with official authorities.</li>
     </ul>
   </div>
@@ -137,7 +149,7 @@ const breadcrumb = {
     <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 
@@ -186,6 +198,7 @@ const breadcrumb = {
 <script type="application/json" id="import-rules" set:html={JSON.stringify(importrules)}></script>
 <script type="application/json" id="models-data" set:html={JSON.stringify(models)}></script>
 <script type="application/json" id="brand-name" set:html={JSON.stringify(brandName)}></script>
+<script type="application/json" id="relation-by-key" set:html={JSON.stringify(relationByKey)}></script>
 <script type="application/json" id="site-config" set:html={JSON.stringify({ marketUrl: MARKET_SITE_URL, dataUrl: DATA_SITE_URL })}></script>
 <script>
   const countries = JSON.parse(document.getElementById("countries-data").textContent);
@@ -193,6 +206,7 @@ const breadcrumb = {
   const importRules = JSON.parse(document.getElementById("import-rules").textContent);
   const models = JSON.parse(document.getElementById("models-data").textContent);
   const brandName = JSON.parse(document.getElementById("brand-name").textContent);
+  const relationByKey = JSON.parse(document.getElementById("relation-by-key").textContent);
   const { marketUrl, dataUrl } = JSON.parse(document.getElementById("site-config").textContent);
 
   const el = (id) => document.getElementById(id);
@@ -200,6 +214,35 @@ const breadcrumb = {
 
   function ruleBadge(r) {
     return r.needs_review ? ' <span class="badge badge-review">needs review</span>' : "";
+  }
+
+  // Render a source-tracked relation field (drive_side_fit / powertrain_fit / import_eligibility / model_considerations).
+  function relField(label, f) {
+    if (!f) return "";
+    const flag = f.needs_review ? ' <span class="badge badge-review">needs review</span>' : "";
+    const body = f.summary || f.notes || "";
+    return `<div style="margin:6px 0"><strong>${label}</strong>${flag}<br/><span class="rate-meta">${body}</span><br/><span class="rate-meta">Source: ${f.source || "—"} · ${f.checked_date || "—"} · confidence ${f.confidence || "unknown"}</span></div>`;
+  }
+
+  // Build the curated Vehicle × Market fit block when a relation exists.
+  function relationHtml(rel) {
+    if (!rel) return "";
+    const ec = rel.ev_charging_compat;
+    const evCompat = ec && ec.needs_adapter != null
+      ? `<div style="margin:6px 0"><strong>EV charging</strong>${ec.needs_review ? ' <span class="badge badge-review">needs review</span>' : ""}<br/><span class="rate-meta">${ec.standard || "—"} inlet vs ${ec.destination_standard || "—"} network — adapter ${ec.needs_adapter ? "required" : "not required"}.</span></div>`
+      : "";
+    const dutyNote = rel.duty_anchors && rel.duty_anchors.ev_duty_relief
+      ? `<div style="margin:6px 0"><strong>EV duty relief</strong><br/><span class="rate-meta">${rel.duty_anchors.notes || "EV-specific duty relief referenced from taxrules — verify current rates."}</span></div>`
+      : "";
+    return (
+      relField("Drive side", rel.drive_side_fit) +
+      relField("Powertrain", rel.powertrain_fit) +
+      relField("Import eligibility", rel.import_eligibility) +
+      evCompat +
+      dutyNote +
+      relField("Model considerations", rel.model_considerations) +
+      `<div style="margin:6px 0"><a href="${dataUrl}/models/${rel.vehicle_id}/" target="_blank" rel="noopener">Vehicle data page →</a> · <a href="${marketUrl}/countries/${rel.country_id}/" target="_blank" rel="noopener">Market page →</a></div>`
+    );
   }
 
   function compute() {
@@ -245,12 +288,17 @@ const breadcrumb = {
       ? "<ul>" + issues.map((i) => `<li>${i}</li>`).join("") + "</ul>"
       : "<p>No known issues with current data.</p>";
 
+    // Curated Vehicle × Market relation (if published).
+    const rel = relationByKey[`${modelId}|${countryId}`] || null;
+    const relBlock = relationHtml(rel);
+
     el("result").innerHTML =
       `<div class="result-panel">
         <h3>${brandName[model.brand_id]} ${model.name} → ${country.name}</h3>
         <div class="result-line"><span>Drive side</span><span>${driveHtml}</span></div>
         <div class="result-line"><span>Import eligibility</span><span>${rulesHtml}</span></div>
         <div class="result-line"><span>Estimated taxes</span><span>${taxesHtml}</span></div>
+        ${relBlock ? `<div class="result-line" style="flex-direction:column;align-items:flex-start"><span>Curated market fit</span><span>${relBlock}</span></div>` : ""}
         <div class="result-line"><span>Potential issues</span><span>${issuesHtml}</span></div>
         <div class="result-line"><span>Market notes</span><span><a href="${marketUrl}/countries/${countryId}/" target="_blank" rel="noopener">${country.name} market page →</a></span></div>
       </div>` +

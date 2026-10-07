@@ -44,7 +44,7 @@ const breadcrumb = {
   title="Import Duty Calculator — China Used Car Export"
   description="Estimate import duty and VAT on a used vehicle by country, value, vehicle type, fuel type, engine size and age. Every rate shows its source and date."
   canonical="/import-duty-calculator/"
-  lastUpdated="2026-10-04"
+  lastUpdated="2026-10-07"
   jsonLd={[webApp, breadcrumb]}
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
@@ -138,7 +138,7 @@ Total tax  = Import duty + VAT</div>
   <div class="section">
     <h2>Limitations</h2>
     <ul>
-      <li>Rates come from public trade summaries and are flagged <strong>needs review</strong>; confirm with the destination customs authority.</li>
+      <li>Rates come from <strong>market.chinausedautohub.com</strong> taxrules.json and are flagged <strong>needs review</strong>; confirm with the destination customs authority.</li>
       <li>Age/engine/fuel-specific duty bands are not modeled — this is a flat-rate estimate.</li>
       <li>Customs valuation may differ from the declared value.</li>
     </ul>
@@ -156,15 +156,15 @@ Total tax  = Import duty + VAT</div>
   <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Tax rules: public trade summaries, last checked <strong>2026-10-04</strong> (flagged needs review).</li>
-      <li>Country data: structured market dataset.</li>
+      <li>Import duty &amp; VAT rates: <strong>market.chinausedautohub.com</strong> taxrules.json, checked <strong>2026-10-07</strong> (many flagged needs review).</li>
+      <li>Country data: market.chinausedautohub.com countries.json.</li>
     </ul>
   </div>
 
     <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 

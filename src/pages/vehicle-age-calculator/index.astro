@@ -10,7 +10,6 @@ const pageUrl = TOOLS_SITE_URL + "/vehicle-age-calculator/";
 
 const countries = countriesData.countries;
 const rules = importrulesData.rules || [];
-const lastChecked = [...new Set(rules.map((r) => r.last_checked).filter(Boolean))].join(", ");
 
 // Pre-build: country_id -> vehicle_age rules (for the comparison list).
 const ageRulesByCountry = {};
@@ -48,7 +47,7 @@ const breadcrumb = {
   description="Calculate a vehicle's age in years and months from its manufacture month and year, then compare it against destination-country age limits for used car imports."
   canonical="/vehicle-age-calculator/"
   jsonLd={[webApp, breadcrumb]}
-  lastUpdated={lastChecked}
+  lastUpdated="2026-10-07"
   breadcrumbs={[
     { name: "Tools", url: TOOLS_SITE_URL + "/" },
     { name: "Vehicle Age Calculator", url: pageUrl },
@@ -119,20 +118,21 @@ Compliance = compare decimal years against each destination's maximum-age rule</
   </div>
 
   <div class="section">
-  <div class="section">
     <h2>Data source</h2>
     <ul>
-      <li>Age limits: structured import-rule dataset (market data), each rule source-tracked.</li>
+      <li>Age limits: <strong>market.chinausedautohub.com</strong> importrules.json (vehicle_age category), each rule source-tracked, checked <strong>2026-10-07</strong>.</li>
+      <li>Country data: market.chinausedautohub.com countries.json.</li>
     </ul>
   </div>
 
   <div class="section">
     <h2>Last updated</h2>
     <ul>
-      <li>Age rules last checked <strong>2026-10-04</strong>.</li>
+      <li>Wiring verified <strong>2026-10-07</strong>.</li>
     </ul>
   </div>
 
+  <div class="section">
     <h2>Limitations</h2>
     <ul>
       <li>Age rules are high-risk data and change; several are flagged "needs review" or lack a numeric limit.</li>
